@@ -13,3 +13,4 @@ m2crypto
 qrcode
 xmltodict
 pyopenssl
+jinja2
