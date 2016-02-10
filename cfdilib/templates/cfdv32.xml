@@ -32,7 +32,7 @@
             municipio="{{ inv.emitter_municipality }}"
             noExterior="{{ inv.emitter_exterior_no }}"
             noInterior="{{ inv.emitter_interior_no }}"
-            pais="{{inv.emitter_country"/>
+            pais="{{inv.emitter_country }}"/>
         <cfdi:ExpedidoEn
             calle="{{ inv.emitter_issue_on_street }}"
             codigoPostal="{{ inv.emitter_issue_on_zip }}"
@@ -55,10 +55,10 @@
             colonia="{{ inv.receiver_colony }}"
             estado="{{ inv.receiver_state}}"
             localidad="{{ inv.receiver_locality }}"
-            municipio="{{inv.receiver_municipality }}"
+            municipio="{{ inv.receiver_municipality }}"
             noExterior="{{ inv.receiver_exterior_no }}"
             noInterior="{{ inv.receiver_interior_no }}"
-            pais="{{inv.receiver_country"/>
+            pais="{{ inv.receiver_country }}"/>
     </cfdi:Receptor>{
     % if inv.invoice_lines %}
     <cfdi:Conceptos>
