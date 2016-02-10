@@ -60,7 +60,7 @@
             noInterior="{{ inv.receiver_interior_no }}"
             pais="{{ inv.receiver_country }}"/>
     </cfdi:Receptor>{
-    % if inv.invoice_lines %}
+    {% if inv.invoice_lines %}
     <cfdi:Conceptos>
         {% for invoive_line in inv.invoice_lines %}
         <cfdi:Concepto
