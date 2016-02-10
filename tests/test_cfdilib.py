@@ -35,13 +35,20 @@ class TestCfdilib(unittest.TestCase):
 
         invoice = Invoice32({})
         self.assertTrue(invoice.validate(invoice.schema,
-                                         self._get_test_file('cfdv32.xml')))
+                                         self._get_test_file('cfdv32.xml')),
+                        'The xml can be used with all parameters')
+        self.assertTrue(invoice.validate(invoice.schema,
+                                         self._get_test_file('cfdv32.notaxes.xml')),
+                        'The xml can be used with no taxes, just the tag')
         self.assertFalse(invoice.validate(invoice.schema,
-                                          self._get_test_file('cfdv32.bad.xml')))
+                                          self._get_test_file('cfdv32.bad.xml')),
+                         'The xml bring a fixed attribute incorrectly')
         self.assertFalse(invoice.validate(invoice.schema,
-                                          self._get_test_file('cfdv32.bad.label.xml')))
+                                          self._get_test_file('cfdv32.bad.label.xml')),
+                         'The xml bring a not valid attribute')
         self.assertFalse(invoice.validate(invoice.schema,
-                                          self._get_test_file('cfdv32.bad.schema.xml')))
+                                          self._get_test_file('cfdv32.bad.schema.xml')),
+                         'The xml do not bring any schema compliant')
 
 
 if __name__ == '__main__':
