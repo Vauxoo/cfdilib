@@ -8,13 +8,11 @@ from jinja2 import Environment, PackageLoader
 
 class BaseInvoice:
     """Meta model for an invoice, this is the one that will be used To simplify
-    the conversion, I will use odoo's attribute names. For an invoice, but we
-    should map them with official elements name also in order to be more
-    generic this is a TODO.
+    the conversion.
 
     Attributes:
-        emitted_place Known in the doc as LugarExpedicion format: 'City Name
-        State Name, Country'
+        emitted_place: Known in the doc as LugarExpedicion format
+                       'City Name State Name, Country'
     """
     __metaclass__ = ABCMeta
     output_file = NamedTemporaryFile(delete=False)
@@ -52,6 +50,8 @@ class BaseInvoice:
             etree.fromstring(xml_valid, xmlparser)
             return True
         except etree.XMLSchemaError:
+            return False
+        except etree.XMLSyntaxError:
             return False
 
 
