@@ -38,6 +38,10 @@ class TestCfdilib(unittest.TestCase):
                                          self._get_test_file('cfdv32.xml')))
         self.assertFalse(invoice.validate(invoice.schema,
                                           self._get_test_file('cfdv32.bad.xml')))
+        self.assertFalse(invoice.validate(invoice.schema,
+                                          self._get_test_file('cfdv32.bad.label.xml')))
+        self.assertFalse(invoice.validate(invoice.schema,
+                                          self._get_test_file('cfdv32.bad.schema.xml')))
 
 
 if __name__ == '__main__':

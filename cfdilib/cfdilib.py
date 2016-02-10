@@ -49,9 +49,11 @@ class BaseInvoice:
         try:
             etree.fromstring(xml_valid, xmlparser)
             return True
-        except etree.XMLSchemaError:
+        except etree.XMLSchemaError as ups:
+            print('XMLSchemaErrori %s' % ups)
             return False
-        except etree.XMLSyntaxError:
+        except etree.XMLSyntaxError as ups:
+            print('XMLSyntaxError %s' % ups)
             return False
 
 
