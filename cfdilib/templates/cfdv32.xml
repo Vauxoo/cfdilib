@@ -79,19 +79,19 @@
             {%if inv.taxes.withholding %}
             <cfdi:Retenciones>
                 {%for withhold in inv.taxes.withholding %}
-                <cfdi:Retencion
-                    importe="{{ withhold.amount or 0.0 }}"
-                    impuesto="{{ withhold.name }}"/>
+                    <cfdi:Retencion
+                        importe="{{ withhold.amount or 0.0 }}"
+                        impuesto="{{ withhold.name }}"/>
                 {% endfor %}
             </cfdi:Retenciones>
             {% endif %}
-            {%if data_impuestos['Traslados'] %}
+            {% if inv.taxes.transferred %}
             <cfdi:Traslados>
-                {% for tax in data_impuestos['Traslados'] %}
-                <cfdi:Traslado
-                    importe="{{ tax['Traslado']['importe'] or 0.0 }}"
-                    impuesto="{{tax ['Traslado']['impuesto'] }}"
-                    tasa="{{ tax['Traslado']['tasa'] or 0.0 }}"/>
+                {% for tax in inv.taxes.tranferred %}
+                    <cfdi:Traslado
+                        importe="{{ tax.amount or 0.0 }}"
+                        impuesto="{{ tax.name }}"
+                        tasa="{{ tax.rate or 0.0 }}"/>
                 {% endfor %}
             </cfdi:Traslados>
             {% endif %}
