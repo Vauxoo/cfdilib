@@ -13,7 +13,8 @@ class BaseInvoice:
     generic this is a TODO.
 
     Attributes:
-        emitted_place Known in the doc as LugarExpedicion format: 'City Name State Name, Country'
+        emitted_place Known in the doc as LugarExpedicion format: 'City Name
+        State Name, Country'
     """
     __metaclass__ = ABCMeta
     output_file = NamedTemporaryFile(delete=False)
@@ -52,6 +53,7 @@ class BaseInvoice:
             return True
         except etree.XMLSchemaError:
             return False
+
 
 class Invoice32(BaseInvoice):
     """An invoice object following 3.2 CFDI legal format.
@@ -97,4 +99,3 @@ class Invoice32(BaseInvoice):
     def get_cfd(self):
         """cfd: xml just rendered to be signed."""
         return self.cfd
-
