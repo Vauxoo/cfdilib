@@ -9,9 +9,9 @@ cryptography==1.0.1
 PyYAML==3.11
 click
 suds
-m2crypto
-qrcode
-xmltodict
-pyopenssl
+# m2crypto
+# qrcode
+# xmltodict
+# pyopenssl
 jinja2
 lxml
