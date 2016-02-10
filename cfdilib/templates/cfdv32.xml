@@ -4,7 +4,7 @@
     xmlns:cfdi="http://www.sat.gob.mx/cfd/3"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     version="3.2"
-    LugarExpedicion="{{ inv.emitter.domicile }}"
+    LugarExpedicion="{{ inv.emitter_domicile }}"
     Moneda="{{ inv.currency }}"
     NumCtaPago="{{ inv.account }}"
     TipoCambio="{{ inv.rate }}"
