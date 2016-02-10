@@ -13,6 +13,9 @@ cache:
   directories:
     - $HOME/.cache/pip
 
+virtualenv:
+  system_site_packages: true
+
 addons:
   apt:
     packages:
