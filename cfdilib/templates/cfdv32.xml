@@ -29,7 +29,7 @@
             colonia="{{ inv.emitter_colony }}"
             estado="{{ inv.emitter_state}}"
             localidad="{{ inv.emitter_locality }}"
-            municipio="{{inv.emitter_municipality }}"
+            municipio="{{ inv.emitter_municipality }}"
             noExterior="{{ inv.emitter_exterior_no }}"
             noInterior="{{ inv.emitter_interior_no }}"
             pais="{{inv.emitter_country"/>
@@ -39,10 +39,10 @@
             colonia="{{ inv.emitter_issue_on_colony }}"
             estado="{{ inv.emitter_issue_on_state}}"
             localidad="{{ inv.emitter_issue_on_locality }}"
-            municipio="{{inv.emitter_issue_on_municipality }}"
+            municipio="{{ inv.emitter_issue_on_municipality }}"
             noExterior="{{ inv.emitter_issue_on_exterior_no }}"
             noInterior="{{ inv.emitter_issue_on_interior_no }}"
-            pais="{{inv.emitter_issue_on_country"/>
+            pais="{{ inv.emitter_issue_on_country }}"/>
         <cfdi:RegimenFiscal
             Regimen="{{ inv.emitter_fiscal_position or '' }}"/>
     </cfdi:Emisor>
