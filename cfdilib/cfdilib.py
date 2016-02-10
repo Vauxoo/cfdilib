@@ -1,9 +1,22 @@
 # -*- coding: utf-8 -*-
 import os
+from cStringIO import StringIO
 from abc import ABCMeta, abstractmethod
 from tempfile import NamedTemporaryFile
 from lxml import etree
 from jinja2 import Environment, PackageLoader
+
+
+class Struct(object):
+    def __init__(self, adict):
+        """Convert a dictionary to a class
+
+        @param :adict Dictionary
+        """
+        self.__dict__.update(adict)
+        for k, v in adict.items():
+            if isinstance(v, dict):
+                self.__dict__[k] = Struct(v)
 
 
 class BaseInvoice:
@@ -17,6 +30,7 @@ class BaseInvoice:
     __metaclass__ = ABCMeta
     output_file = NamedTemporaryFile(delete=False)
     input_file = NamedTemporaryFile(delete=False)
+    ups = False
 
     def guess_autoescape(self, template_name):
         if template_name is None or '.' not in template_name:
@@ -49,23 +63,63 @@ class BaseInvoice:
         try:
             etree.fromstring(xml_valid, xmlparser)
             return True
-        except etree.XMLSchemaError:
-            # print('XMLSchemaError %s' % ups)
+        except etree.XMLSchemaError as ups:
+            self.ups = ups
             return False
-        except etree.XMLSyntaxError:
-            # print('XMLSyntaxError %s' % ups)
+        except etree.XMLSyntaxError as ups:
+            self.ups = ups
             return False
 
+    def get_documentation(self, attribute_name, schema_str=None):
+        '''http://effbot.org/zone/element-namespaces.htm
+        TODO: This method should return an schema specific documentation
+        given an element parsing or getting the Clark's Notation from
+        the message error on validate method.
+        I dedicate 6 Hours to this and I did not find a correct way to do this.
+        I will finish other stuff but PLIZ finish this.
+        '''
+        return True
 
 class Invoice32(BaseInvoice):
     """An invoice object following 3.2 CFDI legal format.
+    Due to avoid duplication of work we will delegate the error management
+    Of attributes to the xsd, then the `validate` method will make the job of
+    return the correct error, due to the standard managend on the invoice.
+
+    The template itself must comply with an specific xsd, this is needed to
+    simply pass a dictionary of terms used in the template convert them to
+    attributes of this Invoice32 object using whatever attributes comes there
+
+    Then due to the template itself has all the structure of attributes
+    necessaries to comply with the xsd, theretically the xsd should return the
+    logical error which we are not complying, see cfdv32.xml template to see
+    how you should assembly a new version of this template, then set it to the
+    template_fname attribute and guala your dict will be magically validated
+    and converted to an XML file.
+
+    Why not assembly with simple lxml?
+    ----------------------------------
+
+    Because it is more readable and configurable, it is always more simple
+    inherit a class and set an attribute than overwrite hundreds of methods
+    when it is a big xml.
     """
 
     def __init__(self, dict_invoice):
+        """Convert a dictionary invoice to a Class
+
+        @param :dict_invoice Dictionary with all entries you will need in your
+        template.
+        """
+
         self.set_template_fname()
         self.set_schema_fname()
         self.set_template(self.template_fname)
         self.set_schema(self.schema_fname)
+        self.__dict__.update(dict_invoice)
+        for k, v in dict_invoice.items():
+            if isinstance(v, dict):
+                self.__dict__[k] = Struct(v)
         self.set_cfd()
 
     def set_template_fname(self):
@@ -95,9 +149,17 @@ class Invoice32(BaseInvoice):
         return self.schema
 
     def set_cfd(self):
-        """cfd: xml just rendered to be signed."""
-        self.cfd = ''
+        """cfd: xml just rendered already validated against xsd to be signed.
+        """
+        cfd = self.template.render(inv=self)
+        if self.validate(self.schema, cfd):
+            self.cfd = cfd
+        self.cfd = False
 
     def get_cfd(self):
         """cfd: xml just rendered to be signed."""
         return self.cfd
+
+
+def get_invoice(dict_invoice):
+    return Invoice32(dict_invoice)
