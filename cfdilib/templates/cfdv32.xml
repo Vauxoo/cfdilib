@@ -13,7 +13,7 @@
     fecha="{{ inv.date_invoice_tz }}"
     folio="{{ inv.number or '' }}"
     formaDePago="{{ inv.payment_policy }}"
-    metodoDePago="{{ inv.pay_method or 'No identificado')"
+    metodoDePago="{{ inv.pay_method or 'No identificado' }}"
     noCertificado="{{ inv.certificate_number }}"
     sello=""
     serie="{{ inv.approval_number }}"
