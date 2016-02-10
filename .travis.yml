@@ -6,12 +6,21 @@ language: python
 env:
   - TOXENV=py27
 
-sudo: required
+sudo: false
+
+cache:
+  apt: true
+  directories:
+    - $HOME/.cache/pip
+
+addons:
+  apt:
+    packages:
+      - python-lxml
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
   - pip install -U tox
-  - apt-get install python-lxml
 
 # command to run tests, e.g. python setup.py test
 script: tox
