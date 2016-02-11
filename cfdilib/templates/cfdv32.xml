@@ -1,0 +1,98 @@
+<cfdi:Comprobante
+    xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd"
+    xmlns:cfdi="http://www.sat.gob.mx/cfd/3"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    version="3.2"
+    LugarExpedicion="{{ inv.emitter_domicile }}"
+    Moneda="{{ inv.currency }}"
+    NumCtaPago="{{ inv.account }}"
+    TipoCambio="{{ inv.rate }}"
+    certificado="{{ inv.certificate }}"
+    descuento="{{ inv.discount_amount or 0.0 }}"
+    fecha="{{ inv.date_invoice_tz }}"
+    folio="{{ inv.number or '' }}"
+    formaDePago="{{ inv.payment_policy }}"
+    metodoDePago="{{ inv.pay_method or 'No identificado' }}"
+    noCertificado="{{ inv.certificate_number }}"
+    sello=""
+    serie="{{ inv.approval_number }}"
+    subTotal="{{ inv.subtotal_wo_discount or 0.0 }}"
+    tipoDeComprobante="{{ inv.document_type }}"
+    total="{{ inv.amount_total or 0.0}}">
+    <cfdi:Emisor
+        nombre="{{ inv.emitter_name }}"
+        rfc="{{ inv.emitter_rfc }}">
+        <cfdi:DomicilioFiscal
+            calle="{{ inv.emitter_street }}"
+            codigoPostal="{{ inv.emitter_zip }}"
+            colonia="{{ inv.emitter_colony }}"
+            estado="{{ inv.emitter_state}}"
+            localidad="{{ inv.emitter_locality }}"
+            municipio="{{ inv.emitter_municipality }}"
+            noExterior="{{ inv.emitter_exterior_no }}"
+            noInterior="{{ inv.emitter_interior_no }}"
+            pais="{{inv.emitter_country }}"/>
+        <cfdi:ExpedidoEn
+            calle="{{ inv.emitter_issue_on_street }}"
+            codigoPostal="{{ inv.emitter_issue_on_zip }}"
+            colonia="{{ inv.emitter_issue_on_colony }}"
+            estado="{{ inv.emitter_issue_on_state}}"
+            localidad="{{ inv.emitter_issue_on_locality }}"
+            municipio="{{ inv.emitter_issue_on_municipality }}"
+            noExterior="{{ inv.emitter_issue_on_exterior_no }}"
+            noInterior="{{ inv.emitter_issue_on_interior_no }}"
+            pais="{{ inv.emitter_issue_on_country }}"/>
+        <cfdi:RegimenFiscal
+            Regimen="{{ inv.emitter_fiscal_position or '' }}"/>
+    </cfdi:Emisor>
+    <cfdi:Receptor
+        nombre="{{ inv.receiver_name }}"
+        rfc="{{ inv.receiver_rfc }}">
+        <cfdi:Domicilio
+            calle="{{ inv.receiver_street }}"
+            codigoPostal="{{ inv.receiver_zip }}"
+            colonia="{{ inv.receiver_colony }}"
+            estado="{{ inv.receiver_state}}"
+            localidad="{{ inv.receiver_locality }}"
+            municipio="{{ inv.receiver_municipality }}"
+            noExterior="{{ inv.receiver_exterior_no }}"
+            noInterior="{{ inv.receiver_interior_no }}"
+            pais="{{ inv.receiver_country }}"/>
+    </cfdi:Receptor>
+    {% if inv.invoice_lines %}
+    <cfdi:Conceptos>
+        {% for invoive_line in inv.invoice_lines %}
+        <cfdi:Concepto
+            cantidad="{{ invoice_line.quantity }}"
+            descripcion="{{ (invoice_line.name) }}"
+            importe="{{ invoice_line.subtotal_wo_discount or 0.0 }}"
+            noIdentificacion="{{ (invoice_line.code ) or 'S/N' }}"
+            unidad="{{ invoice_line.unit }}"
+            valorUnitario="{{ invoice_line.price_unit or 0.0 }}"/>
+        {% endfor %}
+    </cfdi:Conceptos>
+    {% endif %}
+    <cfdi:Impuestos
+        totalImpuestosTrasladados="{{ inv.taxes.total_transferred }}"
+        totalImpuestosRetenidos="{{ inv.taxes.total_withhold }}">
+            {%if inv.taxes.withholding %}
+            <cfdi:Retenciones>
+                {%for withhold in inv.taxes.withholding %}
+                    <cfdi:Retencion
+                        importe="{{ withhold.amount or 0.0 }}"
+                        impuesto="{{ withhold.name }}"/>
+                {% endfor %}
+            </cfdi:Retenciones>
+            {% endif %}
+            {% if inv.taxes.transferred %}
+            <cfdi:Traslados>
+                {% for tax in inv.taxes.tranferred %}
+                    <cfdi:Traslado
+                        importe="{{ tax.amount or 0.0 }}"
+                        impuesto="{{ tax.name }}"
+                        tasa="{{ tax.rate or 0.0 }}"/>
+                {% endfor %}
+            </cfdi:Traslados>
+            {% endif %}
+    </cfdi:Impuestos>
+</cfdi:Comprobante>
