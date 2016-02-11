@@ -18,7 +18,6 @@ class Struct(object):
             if isinstance(v, dict):
                 self.__dict__[k] = Struct(v)
 
-
 class BaseInvoice:
     """Meta model for an invoice, this is the one that will be used To simplify
     the conversion.
@@ -54,8 +53,12 @@ class BaseInvoice:
         return env.get_template(template_fname)
 
     def validate(self, schema_str, xml_valid):
-        """Files path, when any doubt why a path and not a string.
-        `http://lxml.de/FAQ.html#why-can-t-lxml-parse-my-xml-from-unicode-strings`
+        """Compare the valid information on an xml from  given schema.
+
+        :param str schema_str: content string from schema file.
+        :param str xml_valid: content string from xml file.
+        :returns: If it is Valid or Not.
+        :rtype: bool
         """
         schema_root = etree.XML(schema_str)
         schema = etree.XMLSchema(schema_root)
@@ -70,15 +73,38 @@ class BaseInvoice:
             self.ups = ups
             return False
 
-    def get_documentation(self, attribute_name, schema_str=None):
-        '''http://effbot.org/zone/element-namespaces.htm
-        TODO: This method should return an schema specific documentation
-        given an element parsing or getting the Clark's Notation from
-        the message error on validate method.
-        I dedicate 6 Hours to this and I did not find a correct way to do this.
-        I will finish other stuff but PLIZ finish this.
+    def get_element_from_clark(self, element):
+        '''**Helper method:** Given a Clark's Notation `{url:schema}Element` element, return the valid xpath on your
+        xsd file, frequently it is not necesary overwrite this method but different xsd from
+        different sourcs can have different logic which I do not know now, then simply take this
+        as an example and set the correct xpath conversion in your project.
+
+        :param str element: Element string following the Clark's Notation'''
+        element = element.split('}')[-1]
+        xpath_path = '//xs:element[@name="{element}"]/xs:annotation/xs:documentation'.format(element=element)  # noqa
+
+        return xpath_path
+
+    def get_documentation(self, element, namespace=None, schema_str=None):
+        '''**Helper method:** should return an schema specific documentation
+        given an element parsing or getting the `Clark's Notation`_
+        `{url:schema}Element` from the message error on validate method.
+
+        :param str element: Element string following the Clark's Notation
+        :param dict namespace: Element string following the Clark's Notation
+
+        :returns: The documentation text if exists
+        :rtype: unicode
+
+        .. _`Clark's Notation`: http://effbot.org/zone/element-namespaces.htm
         '''
-        return True
+        if namespace is None:
+            namespace = {'xs': 'http://www.w3.org/2001/XMLSchema'}
+        schema_root = etree.parse(StringIO(self.schema))
+        document = schema_root.xpath(self.get_element_from_clark(element),
+                                     namespaces=namespace)
+        return document and document[0].text or ''
+
 
 class Invoice32(BaseInvoice):
     """An invoice object following 3.2 CFDI legal format.
@@ -120,6 +146,9 @@ class Invoice32(BaseInvoice):
         for k, v in dict_invoice.items():
             if isinstance(v, dict):
                 self.__dict__[k] = Struct(v)
+
+            if isinstance(v, list):
+                self.__dict__[k] = StructList(v)
         self.set_cfd()
 
     def set_template_fname(self):

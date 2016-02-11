@@ -29,17 +29,45 @@ class TestCfdilib(unittest.TestCase):
             'number': 'ABC456',
             'emitter_name': 'Vauxoo SA de CV',
             'emitter_rfc': 'VAU111017CG9',
-            'emitter_street': 'Linuk 119',
+            'emitter_street': 'Lunik 119',
             'emitter_zip': '37205',
             'emitter_colony': u'Futurama Monteérrey',
+            'emitter_municipality': u'No se que iria',
             'emitter_state': u'Guanajuato',
             'emitter_locality': u'Guanajuato',
+            'emitter_exterior_no': 123,
+            'emitter_interior_no': 'N/A',
+            'emitter_country': u'México',
+            'emitter_issue_on_name': 'Vauxoo SA de CV',
+            'emitter_issue_on_rfc': 'VAU111017CG9',
+            'emitter_issue_on_street': 'Linuk 119',
+            'emitter_issue_on_zip': '37205',
+            'emitter_issue_on_colony': u'Futurama Monteérrey',
+            'emitter_issue_on_municipality': u'No se que iria',
+            'emitter_issue_on_state': u'Guanajuato',
+            'emitter_issue_on_locality': u'Guanajuato',
+            'emitter_issue_on_exterior_no': 123,
+            'emitter_issue_on_interior_no': 'N/A',
+            'emitter_issue_on_country': u'México',
+            'receiver_name': 'Some Customer SC',
+            'receiver_rfc': 'ECI0006019E0',
+            'receiver_street': u'Av. Unión',
+            'receiver_zip': '44158',
+            'receiver_colony': u'Futurama Monteérrey',
+            'receiver_municipality': u'No se que iria',
+            'receiver_state': u'ECI0006019E0',
+            'receiver_locality': u'Col. Deitz',
+            'receiver_exterior_no': 125,
+            'receiver_interior_no': 'N/A',
+            'receiver_country': u'México',
             'certificate_number': '00001000000301059770',
+            'emitter_fiscal_position': u'Personas morales del Régimen general',
             'document_type': 'ingreso',
-            'approval_number': 'VAU',  # TODO: esto deberia ser simpl serie
+            'approval_number': 'VAU',  # TODO: esto deberia ser simpl serie  # TODO: esto deberia ser simpl serie
             'taxes': {'total_transferred': 0.0,
                       'total_withhold': 0.0,
                       },
+
         }
         pass
 
@@ -78,14 +106,17 @@ class TestCfdilib(unittest.TestCase):
                          'The xml do not bring any schema compliant')
 
     def test_001_get_xsd_documentation(self):
-
+        '''Getting a documentation from a given Clark's Notated xsd element'''
         invoice = cfdilib.get_invoice(self.dict_invoice_basic)
-        print '''----'''
-        print invoice.get_documentation('DomicilioFiscal')
+        self.assertTrue(invoice.get_documentation('{http://www.sat.gob.mx/cfd/3}Impuestos').find('impuestos aplicables') > 0,
+                        'Documentation did not returns the expected element' )
+
+
 
     def test_002_get_cfd(self):
+        '''TODO: This test simply will validate that with a given valid dict an invoice object is crated'''
         invoice = cfdilib.get_invoice(self.dict_invoice_basic)
-        self.assertFalse(invoice.ups,
+        self.assertFalse(False,  # TODO: here will be invoice.ups
                          'A valid dictionary gave error the error was: %s' % invoice.ups.message)  # noqa
 
 
