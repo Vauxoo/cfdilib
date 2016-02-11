@@ -80,21 +80,11 @@ class TestCfdilib(unittest.TestCase):
     def test_001_get_xsd_documentation(self):
 
         invoice = cfdilib.get_invoice(self.dict_invoice_basic)
-        # print invoice.get_documentation('municipio')
+        print '''----'''
+        print invoice.get_documentation('DomicilioFiscal')
 
     def test_002_get_cfd(self):
         invoice = cfdilib.get_invoice(self.dict_invoice_basic)
-        # TODO: delete this commented stuff it is just to manage the error.
-        # print type(invoice.ups.error_log.filter_from_errors())
-        # print dir(invoice.ups.error_log.filter_from_errors())
-        # for e in invoice.ups.error_log.filter_from_errors():
-        #     print type(e)
-        #     print dir(e)
-        #     for attt in dir(e):
-        #         if not attt.startswith('_'):
-        #             print 'attr:   ...   ',attt
-        #             print e.__getattribute__(attt)
-
         self.assertFalse(invoice.ups,
                          'A valid dictionary gave error the error was: %s' % invoice.ups.message)  # noqa
 

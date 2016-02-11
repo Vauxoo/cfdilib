@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+from cStringIO import StringIO
 from abc import ABCMeta, abstractmethod
 from tempfile import NamedTemporaryFile
 from lxml import etree
@@ -69,13 +70,15 @@ class BaseInvoice:
             self.ups = ups
             return False
 
-    # def get_documentation(self, attribute, schema_str=None):
-    #     if schema_str is None:
-    #         schema_root = etree.parse(self.schema)
-    #     return schema_root.xpath(attribute,
-    #                              namespaces={'xsd':
-    #                                          'http://www.sat.gob.mx/cfd/3'})
-
+    def get_documentation(self, attribute_name, schema_str=None):
+        '''http://effbot.org/zone/element-namespaces.htm
+        TODO: This method should return an schema specific documentation
+        given an element parsing or getting the Clark's Notation from
+        the message error on validate method.
+        I dedicate 6 Hours to this and I did not find a correct way to do this.
+        I will finish other stuff but PLIZ finish this.
+        '''
+        return True
 
 class Invoice32(BaseInvoice):
     """An invoice object following 3.2 CFDI legal format.
