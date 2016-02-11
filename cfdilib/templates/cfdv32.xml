@@ -45,7 +45,7 @@
         <cfdi:RegimenFiscal
             Regimen="{{ inv.emitter_fiscal_position or '' }}"/>
     </cfdi:Emisor>
-    <cfdi:
+    <cfdi:Receptor
         nombre="{{ inv.receiver_name }}"
         rfc="{{ inv.receiver_rfc }}">
         <cfdi:Domicilio
@@ -58,7 +58,7 @@
             noExterior="{{ inv.receiver_exterior_no }}"
             noInterior="{{ inv.receiver_interior_no }}"
             pais="{{ inv.receiver_country }}"/>
-    </cfdi:Receptor>{
+    </cfdi:Receptor>
     {% if inv.invoice_lines %}
     <cfdi:Conceptos>
         {% for invoive_line in inv.invoice_lines %}

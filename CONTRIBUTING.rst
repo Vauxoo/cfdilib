@@ -39,7 +39,7 @@ Write Documentation
 ~~~~~~~~~~~~~~~~~~~
 
 Mexico CFDI Lib could always use more documentation, whether as part of the
-official Mexico CFDI Lib docs, in docstrings, or even on the web in blog posts,
+official Mexico CFDI Lib docs, in `docstring`_, or even on the web in blog posts,
 articles, and such.
 
 Submit Feedback
@@ -99,7 +99,7 @@ Before you submit a pull request, check that it meets these guidelines:
 
 1. The pull request should include tests.
 2. If the pull request adds functionality, the docs should be updated. Put
-   your new functionality into a function with a docstring, and add the
+   your new functionality into a function with a `docstring`_, and add the
    feature to the list in README.rst.
 3. The pull request should work for Python 2.6, 2.7, 3.3, 3.4 and 3.5, and for PyPy. Check
    https://travis-ci.org/vauxoo/cfdilib/pull_requests
@@ -111,3 +111,5 @@ Tips
 To run a subset of tests::
 
     $ python -m unittest tests.test_cfdilib
+
+.. _docstring: http://www.sphinx-doc.org/en/stable/domains.html#signatures
