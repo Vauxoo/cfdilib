@@ -1,22 +1,17 @@
-===============================
-Mexico CFDI Lib
-===============================
+=======================
+Xml documents generator
+=======================
 
-.. image:: https://img.shields.io/pypi/v/cfdilib.svg
-        :target: https://pypi.python.org/pypi/cfdilib
-
-.. image:: https://img.shields.io/travis/vauxoo/cfdilib.svg
-        :target: https://travis-ci.org/vauxoo/cfdilib
-
-.. image:: https://readthedocs.org/projects/cfdilib/badge/?version=latest
-        :target: https://readthedocs.org/projects/cfdilib/?badge=latest
-        :alt: Documentation Status
+.. image:: https://travis-ci.com/Vauxoo/cfdilib.svg?token=VAty1EWicYm2yKQxZptp&branch=master
+    :target: https://travis-ci.com/Vauxoo/cfdilib
 
 
-Library to manage xml CDFI from python and sign with several pacs.
+Library to xml documents based on XSD files to manage situations where you need to sign such
+documents with a third party, then given a simple dictionary and a jinja2 template you will be
+able to generate such documents with almos 0 logic..
 
-* Free software: ISC license
-* Documentation: https://cfdilib.readthedocs.org.
+* Free software: Vauxoo Licence
+* Documentation: https://vauxoo.github.io/cfdilib
 
 Features
 --------
@@ -25,6 +20,8 @@ Features
 
 Credits
 ---------
+
+Designed by: Nhomar Hernández <nhomar@vauxoo.com>
 
 This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
 
