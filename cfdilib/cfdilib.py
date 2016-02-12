@@ -30,6 +30,9 @@ class BaseDocument:
     ups = False
 
     def guess_autoescape(self, template_name):
+        '''Given a template Name I will gues using its extension if we should autoscape or not.
+        Defaul autoscaped extensions: ('html', 'xhtml', 'htm', 'xml')
+        '''
         if template_name is None or '.' not in template_name:
             return False
         ext = template_name.rsplit('.', 1)[1]
@@ -63,16 +66,18 @@ class BaseDocument:
         xmlparser = etree.XMLParser(schema=schema)
         try:
             etree.fromstring(xml_valid, xmlparser)
-            return True
+            result = True
         except etree.XMLSyntaxError as ups:
             self.ups = ups
-            return False
+            result = False
+        finally:
+            return result
 
     def get_element_from_clark(self, element):
-        '''**Helper method:** Given a Clark's Notation `{url:schema}Element` element, return the valid xpath on your
-        xsd file, frequently it is not necesary overwrite this method but different xsd from
-        different sourcs can have different logic which I do not know now, then simply take this
-        as an example and set the correct xpath conversion in your project.
+        '''**Helper method:** Given a Clark's Notation `{url:schema}Element` element, return the
+        valid xpath on your xsd file, frequently it is not necesary overwrite this method but
+        different xsd from different sourcs can have different logic which I do not know now,
+        then simply take this as an example and set the correct xpath conversion in your project.
 
         :param str element: Element string following the Clark's Notation'''
         element = element.split('}')[-1]
@@ -170,10 +175,8 @@ class Invoice32(BaseDocument):
         self.cfd = False
         if self.debug_mode:
             self.cfd = cfd
-            self.ups = True  # Forced to return only True. FIXME: what about the types?
         if self.validate(self.schema, cfd):
             self.cfd = cfd
-            return True
 
 
 def get_invoice(dict_invoice, debug_mode=False):
