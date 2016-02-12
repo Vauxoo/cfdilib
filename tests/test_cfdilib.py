@@ -6,6 +6,7 @@ test_cfdilib
 ----------------------------------
 
 Tests for `cfdilib` module.
+Tests for `cfdv32` module.
 """
 
 from os.path import join, dirname
