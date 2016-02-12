@@ -18,14 +18,12 @@ class Struct(object):
             if isinstance(v, dict):
                 self.__dict__[k] = Struct(v)
 
-class BaseInvoice:
-    """Meta model for an invoice, this is the one that will be used To simplify
-    the conversion.
 
-    Attributes:
-        emitted_place: Known in the doc as LugarExpedicion format
-                       'City Name State Name, Country'
+class BaseDocument:
+    """Meta model for an xml document from a dictionary and an xsd file, this is
+    the one that will be used To simplify the conversion and prepare the document for a signature.
     """
+
     __metaclass__ = ABCMeta
     output_file = NamedTemporaryFile(delete=False)
     input_file = NamedTemporaryFile(delete=False)
@@ -66,9 +64,6 @@ class BaseInvoice:
         try:
             etree.fromstring(xml_valid, xmlparser)
             return True
-        except etree.XMLSchemaError as ups:
-            self.ups = ups
-            return False
         except etree.XMLSyntaxError as ups:
             self.ups = ups
             return False
@@ -106,7 +101,7 @@ class BaseInvoice:
         return document and document[0].text or ''
 
 
-class Invoice32(BaseInvoice):
+class Invoice32(BaseDocument):
     """An invoice object following 3.2 CFDI legal format.
     Due to avoid duplication of work we will delegate the error management
     Of attributes to the xsd, then the `validate` method will make the job of
@@ -131,13 +126,13 @@ class Invoice32(BaseInvoice):
     when it is a big xml.
     """
 
-    def __init__(self, dict_invoice):
+    def __init__(self, dict_invoice, debug_mode=False):
         """Convert a dictionary invoice to a Class
 
         @param :dict_invoice Dictionary with all entries you will need in your
         template.
         """
-
+        self.debug_mode = debug_mode
         self.set_template_fname()
         self.set_schema_fname()
         self.set_template(self.template_fname)
@@ -146,49 +141,40 @@ class Invoice32(BaseInvoice):
         for k, v in dict_invoice.items():
             if isinstance(v, dict):
                 self.__dict__[k] = Struct(v)
-
-            if isinstance(v, list):
-                self.__dict__[k] = StructList(v)
         self.set_cfd()
 
     def set_template_fname(self):
-        """Wired to a known file it works as an API."""
+        """Wired to a known file which is a jinja2 valid template
+        it works as an API."""
         self.template_fname = 'cfdv32.xml'
-
-    def get_template_fname(self):
-        return self.template_fname
 
     def set_schema_fname(self):
         """The same than template but with .xsd on templates folder."""
         self.schema_fname = self.template_fname.replace('.xml', '.xsd')
 
-    def get_schema_fname(self):
-        return self.schema_fname
-
     def set_template(self, template_fname):
         self.template = super(Invoice32, self).set_template(template_fname)
-
-    def get_template(self):
-        return self.template
 
     def set_schema(self, schema_fname):
         self.schema = super(Invoice32, self).set_schema(schema_fname)
 
-    def get_schema(self):
-        return self.schema
-
     def set_cfd(self):
         """cfd: xml just rendered already validated against xsd to be signed.
+
+        :params boolean debug_mode: Either if you want the rendered template to be saved either it
+        is valid or not with the given schema.
+
+        :returns boolean: Either was valid or not the generated document.
         """
         cfd = self.template.render(inv=self)
+        self.cfd = False
+        if self.debug_mode:
+            self.cfd = cfd
+            self.ups = True  # Forced to return only True. FIXME: what about the types?
         if self.validate(self.schema, cfd):
             self.cfd = cfd
-        self.cfd = False
-
-    def get_cfd(self):
-        """cfd: xml just rendered to be signed."""
-        return self.cfd
+            return True
 
 
-def get_invoice(dict_invoice):
-    return Invoice32(dict_invoice)
+def get_invoice(dict_invoice, debug_mode=False):
+    return Invoice32(dict_invoice, debug_mode=debug_mode)
