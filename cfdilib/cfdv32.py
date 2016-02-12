@@ -2,6 +2,7 @@
 
 from cfdilib import BaseDocument
 
+
 class CFDv32(BaseDocument):
     """Invoice document to comply with cfdi: v3.2 for Invoice Mexico Standards."""
 
@@ -25,6 +26,7 @@ class CFDv32(BaseDocument):
 
     def set_schema(self, schema_fname):
         self.schema = super(CFDv32, self).set_schema(schema_fname)
+
 
 def get_invoice(dict_invoice, debug_mode=False):
     return CFDv32(dict_invoice, debug_mode=debug_mode)
