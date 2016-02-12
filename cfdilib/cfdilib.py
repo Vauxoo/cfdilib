@@ -56,7 +56,7 @@ class BaseDocument:
     @abstractmethod
     def __init__(self, dict_document, debug_mode=False, cache=1000):
         """Convert a dictionary invoice to a Class with a
-        based xsd and xslt wlwment to be signed.
+        based xsd and xslt element to be signed.
 
         :param dict dict_document: Dictionary with all entries
             you will need in your template.
