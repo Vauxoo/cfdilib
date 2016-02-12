@@ -15,7 +15,7 @@
     metodoDePago="{{ inv.pay_method or 'No identificado' }}"
     noCertificado="{{ inv.certificate_number }}"
     sello=""
-    serie="{{ inv.approval_number }}"
+    serie="{{ inv.serie }}"
     subTotal="{{ inv.subtotal_wo_discount or 0.0 }}"
     tipoDeComprobante="{{ inv.document_type }}"
     total="{{ inv.amount_total or 0.0}}">
@@ -61,7 +61,7 @@
     </cfdi:Receptor>
     {% if inv.invoice_lines %}
     <cfdi:Conceptos>
-        {% for invoive_line in inv.invoice_lines %}
+        {% for invoice_line in inv.invoice_lines %}
         <cfdi:Concepto
             cantidad="{{ invoice_line.quantity }}"
             descripcion="{{ (invoice_line.name) }}"
@@ -86,7 +86,7 @@
             {% endif %}
             {% if inv.taxes.transferred %}
             <cfdi:Traslados>
-                {% for tax in inv.taxes.tranferred %}
+                {% for tax in inv.taxes.transferred %}
                     <cfdi:Traslado
                         importe="{{ tax.amount or 0.0 }}"
                         impuesto="{{ tax.name }}"

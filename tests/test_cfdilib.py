@@ -63,13 +63,27 @@ class TestCfdilib(unittest.TestCase):
             'certificate_number': '00001000000301059770',
             'emitter_fiscal_position': u'Personas morales del Régimen general',
             'document_type': 'ingreso',
-            'approval_number': 'VAU',  # TODO: esto deberia ser simpl serie  # TODO: esto deberia ser simpl serie
-            'taxes': {'total_transferred': 0.0,
-                      'total_withhold': 0.0,
-                      },
-
+            'amount_total': 100.0,
+            'subtotal_wo_discount': 100.0,
+            'serie': 'VAU',
+            'invoice_lines': [
+                              {'name': 'CPU XYZ',
+                               'quantity': 1.0,
+                               'subtotal_wo_discount': 50.0,
+                               'code': 'XYZ',
+                               'unit': 'Unidad',
+                               'price_unit': 50.0},
+            ],
+            'taxes': {'total_withhold': 1.0,
+                      'total_transferred': 1.0,
+                      'withholding': [{'amount': 2.0,
+                                       'name': 'IVA', }],
+                      'transferred': [{'amount': 3.0,
+                                       'name': 'IVA',
+                                       'rate': 1.0}
+                                      ]},
+            'you_can_use_unused_in_xsd': {'with_2_levels_or_more': {'third_level': '100'}},
         }
-        pass
 
     def tearDown(self):
         pass
@@ -108,16 +122,24 @@ class TestCfdilib(unittest.TestCase):
     def test_001_get_xsd_documentation(self):
         '''Getting a documentation from a given Clark's Notated xsd element'''
         invoice = cfdilib.get_invoice(self.dict_invoice_basic)
-        self.assertTrue(invoice.get_documentation('{http://www.sat.gob.mx/cfd/3}Impuestos').find('impuestos aplicables') > 0,
-                        'Documentation did not returns the expected element' )
+        self.assertTrue(invoice.get_documentation('{http://www.sat.gob.mx/cfd/3}Impuestos')
+                        .find('impuestos aplicables') > 0,
+                        'Documentation did not returns the expected element')
 
+    def test_002_get_cfd_debugged(self):
+        '''validate that with a given valid dict an invoice object is created in debug_mode'''
+        invoice = cfdilib.get_invoice(self.dict_invoice_basic, debug_mode=True)
+        information = not invoice.ups and invoice.ups.message
+        self.assertTrue(invoice.ups,  # TODO: here will be invoice.ups
+                        'A valid dictionary gave error the error was: %s' % (information))
 
-
-    def test_002_get_cfd(self):
-        '''TODO: This test simply will validate that with a given valid dict an invoice object is crated'''
-        invoice = cfdilib.get_invoice(self.dict_invoice_basic)
-        self.assertFalse(False,  # TODO: here will be invoice.ups
-                         'A valid dictionary gave error the error was: %s' % invoice.ups.message)  # noqa
+    def test_003_get_cfd(self):
+        '''validate that with a given valid dict an invoice object is created in debug_mode'''
+        invoice = cfdilib.get_invoice(
+            self.dict_invoice_basic, debug_mode=False)
+        information = invoice.ups and invoice.ups.message
+        self.assertFalse(invoice.ups,  # TODO: here will be invoice.ups
+                         'A valid dictionary gave error the error was: %s' % (information))
 
 
 if __name__ == '__main__':
