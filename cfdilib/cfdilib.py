@@ -23,7 +23,7 @@ class BaseDocument:
     """An XML document following any format given an XSD file.
     Due to avoid duplication of work we will delegate the error management
     Of attributes to the xsd, then the `validate` method will make the job of
-    return the correct error, due to the standard managend on the invoice.
+    return the correct error, due to the standard managed on the invoice.
 
     The template itself must comply with an specific xsd, this is needed to
     simply pass a dictionary of terms used in the template convert them to
@@ -105,14 +105,14 @@ class BaseDocument:
         xmlparser = etree.XMLParser(schema=schema)
         try:
             etree.fromstring(xml_valid, xmlparser)
-            self.valid = True
-            result = True
         except etree.XMLSyntaxError as ups:
             self.ups = ups
-            self.valid = False
-            result = False
         finally:
-            return result
+            if self.ups:
+                self.valid = False
+            else:
+                self.valid = True
+            return self.valid
 
     def set_xml(self):
         """Set document xml just rendered already validated against xsd to be signed.
@@ -122,10 +122,11 @@ class BaseDocument:
         :returns boolean: Either was valid or not the generated document.
         """
         document = self.template.render(inv=self)
+        valid = self.validate(self.schema, document)
         self.document = False
-        if self.debug_mode:
+        if not valid and self.debug_mode:
             self.document = document
-        if self.validate(self.schema, document):
+        if valid:
             document = etree.XML(document)
             self.document = etree.tostring(document,
                                            pretty_print=True,
@@ -140,8 +141,8 @@ class BaseDocument:
 
         :param str element: Element string following the Clark's Notation'''
         element = element.split('}')[-1]
-        xpath_path = '//xs:element[@name="{element}"]/xs:annotation/xs:documentation'.format(element=element)  # noqa
-
+        xpath_path = \
+        '//xs:element[@name="{element}"]/xs:annotation/xs:documentation'.format(element=element)
         return xpath_path
 
     def get_documentation(self, element, namespace=None, schema_str=None):

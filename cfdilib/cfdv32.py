@@ -9,13 +9,13 @@ class CFDv32(BaseDocument):
     def __init__(self, dict_invoice, debug_mode=False):
         self.set_template_fname()
         self.set_template(self.template_fname)
-        super(CFDv32, self).__init__(dict_invoice, debug_mode=False)
+        super(CFDv32, self).__init__(dict_invoice, debug_mode=debug_mode)
         # This method must be called from the inherited __init__ always AFTER the super.
         self.set_xml()
 
     def set_template_fname(self):
-        """Wired to a known file which is a jinja2 valid template
-        it works as an API then the file must be in template folder on library dict
+        """Wired to a known file which is a jinja2 valid template it works as an API then the
+        file must be in template folder on library base path.
         """
         # TODO: Idea: may be it can be configurable in order to take the template from other
         # folder or even from the StringIO Itself.

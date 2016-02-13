@@ -59,3 +59,7 @@ docs/_build/
 docs/_themes/ 
 # PyBuilder
 target/
+
+# PyCharm TODO: Remove this to commit separatelly.
+#
+.idea/
