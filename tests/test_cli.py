@@ -8,11 +8,9 @@ test_cfdilib
 Tests for `cfdicli` module.
 """
 
-import click
 from click.testing import CliRunner
 
 import unittest
-import os
 from os.path import join, dirname
 from shutil import copy
 
