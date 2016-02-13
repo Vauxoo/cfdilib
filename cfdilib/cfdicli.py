@@ -24,10 +24,6 @@ def cli(config, in_file, out_file, verbose):
     """
     config.out_file = out_file
     config.verbose = verbose
-    if out_file is None:
-        out_file = 'document.xml'
-    if in_file is None:
-        in_file = 'document.dict'
     config.in_file = in_file
     config.out_file = out_file
 
