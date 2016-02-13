@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Welcome to Mexico CFDI Lib's documentation!
-======================================
+===========================================
 
 Contents:
 
@@ -24,4 +24,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-

@@ -105,19 +105,20 @@ class BaseDocument:
         xmlparser = etree.XMLParser(schema=schema)
         try:
             etree.fromstring(xml_valid, xmlparser)
+            self.valid = True
             result = True
         except etree.XMLSyntaxError as ups:
             self.ups = ups
+            self.valid = False
             result = False
         finally:
             return result
 
     def set_xml(self):
-        """document xml just rendered already validated against xsd to be signed.
+        """Set document xml just rendered already validated against xsd to be signed.
 
         :params boolean debug_mode: Either if you want the rendered template to be saved either it
         is valid or not with the given schema.
-
         :returns boolean: Either was valid or not the generated document.
         """
         document = self.template.render(inv=self)
@@ -125,7 +126,11 @@ class BaseDocument:
         if self.debug_mode:
             self.document = document
         if self.validate(self.schema, document):
-            self.document = document
+            document = etree.XML(document)
+            self.document = etree.tostring(document,
+                                           pretty_print=True,
+                                           xml_declaration=True,
+                                           encoding='utf-8')
 
     def get_element_from_clark(self, element):
         '''**Helper method:** Given a Clark's Notation `{url:schema}Element` element, return the
