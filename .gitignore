@@ -60,3 +60,5 @@ docs/_themes/
 # PyBuilder
 target/
 
+# Pycharm Ignored.
+.idea/workspace.xml
