@@ -38,28 +38,31 @@ class TestCfdilib(unittest.TestCase):
                         'Documentation did not returns the expected element')
 
     def test_002_get_cfd_debugged(self):
-        '''validate that with a given valid dict an invoice object is created in debug_mode'''
+        '''With a given valid dict an invoice object is created in debug_mode'''
         invoice = cfdv32.get_invoice(self.dict_invoice_basic_32, debug_mode=True)
         self.assertTrue(invoice.document,
-                        'A valid dictionary gave error debugged_mode enabled gave an error.')
+                         'A valid dictionary gave error debugged_mode enabled')
 
     def test_003_get_cfd(self):
-        '''validate that with a given valid dict an invoice object is created in debug_mode'''
-        invoice = cfdv32.get_invoice(self.dict_invoice_basic_32, debug_mode=False)
+        '''With a given valid dict an invoice object is created'''
+        invoice = cfdv32.get_invoice(self.dict_invoice_basic_32)
         self.assertTrue(invoice.document,
                         'A valid dictionary gave error an error')
 
     def test_004_get_errored(self):
-        '''validate that with a given invalid dict raise properly errors on ups object'''
+        '''With a given invalid dict raise properly errors on ups object'''
         invoice = cfdv32.get_invoice(self.dict_invoice_basic_32_errored)
-
         self.assertTrue(invoice.ups,
-                      'An invalid dictionary gave a valid output, that is wrong.')
-
+                        'An invalid dictionary gave a valid output, that is wrong.')
         # Ok it failed!, then we assert if the message is the one I expected for.
-
         self.assertTrue(invoice.ups.message.find('Emisor') > 0,
-                        'The expected faled entry Emisor was erroneous.')
+                        'The expected failed entry Emisor was erroneous.')
+
+    def test_005_get_cfd_invalid_debugged(self):
+        '''With a given `invalid` dict an invoice object is created in debug_mode'''
+        invoice = cfdv32.get_invoice(self.dict_invoice_basic_32_errored, debug_mode=True)
+        self.assertTrue(invoice.document,
+                        'A invalid dictionary gave error debugged_mode enabled gave an error.')
 
 
 if __name__ == '__main__':
