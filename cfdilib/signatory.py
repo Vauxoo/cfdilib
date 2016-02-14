@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 
-
-import base64
 from suds.client import Client
-from suds import WebFault
 from urllib2 import URLError
+
 
 class Signatory(object):
     """A third party element against which we will sign the invoice.
@@ -23,6 +21,16 @@ class Signatory(object):
         self.url = url
         self.user = user
         self.password = password
+        self.document = None
+        self.result = None
+
+    def _sign(self):
+        try:
+            # The name of the service here will change depending of the signatory
+            # third party.
+            self.result = self.client.service.stamp(self.document, self.user, self.password)
+        except Exception as e:
+            print e
 
     def sign(self, xml_doc):
         """Sign the document with a third party signatory.
@@ -36,4 +44,3 @@ class Signatory(object):
             self.message = e.message
         except URLError:
             self.message = 'The url you provided: %s could not be reached' % self.url
-

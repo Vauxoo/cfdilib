@@ -4,6 +4,7 @@ from cStringIO import StringIO
 from abc import ABCMeta, abstractmethod
 from tempfile import NamedTemporaryFile
 from lxml import etree
+from tools import tools
 from jinja2 import Environment, PackageLoader
 
 
@@ -45,33 +46,52 @@ class BaseDocument:
     """
 
     @abstractmethod
-    def __init__(self, dict_document, debug_mode=False):
-        """Convert a dictionary invoice to a Class
+    def __init__(self, dict_document, debug_mode=False, cache=1000):
+        """Convert a dictionary invoice to a Class with a based xsd and xslt wlwment to be signed.
 
-        @param :dict_invoice Dictionary with all entries you will need in your
-        template.
+        :param dict dict_document: Dictionary with all entries you will need in your template.
+        :param bool debug_mode: If debugging or not.
+        :param int cache: Time in seconds the url given files will be cached on tmp folder.
         """
+        self.ups = False
         self.debug_mode = debug_mode
+        self.schema_url = None
+        self.document = None
+        self.document_path = None
+        self.xslt_path = None
+        self.xslt_document = None
         self.set_schema_fname()
         self.set_schema(self.schema_fname)
         self.__dict__.update(dict_document)
         for k, v in dict_document.items():
             if isinstance(v, dict):
                 self.__dict__[k] = Struct(v)
+        self.set_xml()
+        self.set_xslt_fname()
+        self.document_orginal = self.set_original()
 
     __metaclass__ = ABCMeta
-    output_file = NamedTemporaryFile(delete=False)
-    input_file = NamedTemporaryFile(delete=False)
-    ups = False
+
+    def set_original(self):
+        if self.document_path and self.xslt_fname:
+            return tools.get_original(self.document_path, self.xslt_fname)
 
     def set_schema_fname(self):
         """The same than template but with .xsd on templates folder."""
         self.schema_fname = self.template_fname.replace('.xml', '.xsd')
 
+    def set_xslt_fname(self):
+        """The same than template but with .xslt on templates folder this in case you want to use
+        it locally."""
+        if not self.xslt_fname:
+            self.xslt_fname = self.template_fname.replace('.xml', '.xslt')
+        else:
+            self.set_xslt()
+
     def guess_autoescape(self, template_name):
-        '''Given a template Name I will gues using its extension if we should autoscape or not.
+        """Given a template Name I will gues using its extension if we should autoscape or not.
         Defaul autoscaped extensions: ('html', 'xhtml', 'htm', 'xml')
-        '''
+        """
         if template_name is None or '.' not in template_name:
             return False
         ext = template_name.rsplit('.', 1)[1]
@@ -84,6 +104,19 @@ class BaseDocument:
         with open(testxml, 'r') as element:
             schema = element.read()
         return schema
+
+    @abstractmethod
+    def set_xslt(self):
+        if self.xslt_fname and tools.is_url(self.xslt_fname):
+            xslt_path = tools.cache_it(self.xslt_fname)
+        elif self.xslt_fname:
+            xslt_path = os.path.join(os.path.dirname(__file__),
+                                     'templates', self.xslt_fname)
+        with open(xslt_path, 'r') as element:
+            xslt = element.read()
+            self.xslt_document = xslt
+            # In case of caching, the xslt_path will be from cahed and not from local
+            self.xslt_fname = xslt_path
 
     @abstractmethod
     def set_template(self, template_fname):
@@ -121,6 +154,7 @@ class BaseDocument:
         is valid or not with the given schema.
         :returns boolean: Either was valid or not the generated document.
         """
+        cached = NamedTemporaryFile(delete=False)
         document = self.template.render(inv=self)
         valid = self.validate(self.schema, document)
         self.document = False
@@ -132,21 +166,27 @@ class BaseDocument:
                                            pretty_print=True,
                                            xml_declaration=True,
                                            encoding='utf-8')
+            # TODO: When Document Generated, this this should not fail either.
+            # Caching just when valid then.
+            with cached as cache:
+                cache.write(self.document is not None and self.document or u'')
+            self.document_path = cached.name
 
     def get_element_from_clark(self, element):
-        '''**Helper method:** Given a Clark's Notation `{url:schema}Element` element, return the
+        """**Helper method:** Given a Clark's Notation `{url:schema}Element` element, return the
         valid xpath on your xsd file, frequently it is not necesary overwrite this method but
         different xsd from different sourcs can have different logic which I do not know now,
         then simply take this as an example and set the correct xpath conversion in your project.
 
-        :param str element: Element string following the Clark's Notation'''
+        :param str element: Element string following the Clark's Notation"""
         element = element.split('}')[-1]
         xpath_path = \
-        '//xs:element[@name="{element}"]/xs:annotation/xs:documentation'.format(element=element)
+            '//xs:element[@name="{element}"]/xs:annotation/xs:documentation'.format(
+                element=element)
         return xpath_path
 
     def get_documentation(self, element, namespace=None, schema_str=None):
-        '''**Helper method:** should return an schema specific documentation
+        """**Helper method:** should return an schema specific documentation
         given an element parsing or getting the `Clark's Notation`_
         `{url:schema}Element` from the message error on validate method.
 
@@ -157,7 +197,7 @@ class BaseDocument:
         :rtype: unicode
 
         .. _`Clark's Notation`: http://effbot.org/zone/element-namespaces.htm
-        '''
+        """
         if namespace is None:
             namespace = {'xs': 'http://www.w3.org/2001/XMLSchema'}
         schema_root = etree.parse(StringIO(self.schema))
