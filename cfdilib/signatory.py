@@ -31,7 +31,7 @@ class Signatory(object):
         :returns answer: Answer is given from the signatory itself if connected.
         """
         try:
-            self.client = Client(self.url, cache=None)
+            self.client = Client(self.url)
         except ValueError as e:
             self.message = e.message
         except URLError:
