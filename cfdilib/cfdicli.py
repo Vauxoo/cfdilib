@@ -1,8 +1,10 @@
 # coding: utf-8
 '''Command line interface for cfdilib
 '''
-import cfdv32
+
 import click
+
+from . import cfdv32
 
 
 class Config(object):
@@ -14,13 +16,18 @@ pass_config = click.make_pass_decorator(Config, ensure=True)
 
 
 @click.group()
-@click.option('--verbose', is_flag=True, help='Pass the result to the standard out')
-@click.option('--out_file', type=click.File('wb'), default='document.xml')
-@click.option('--in_file', type=click.File('rb'), default="document.json")
+@click.option('--verbose', is_flag=True,
+              help='Pass the result to the standard out')
+@click.option('--out_file', type=click.File('wb'),
+              default='document.xml')
+@click.option('--in_file', type=click.File('rb'),
+              default="document.json")
 @pass_config
 def cli(config, in_file, out_file, verbose):
-    """Main Interface to generate xml documents from custom dictionaries using legal xsd files
-     complying with legal documents in all countires around the world.
+    """Main Interface to generate xml documents
+    from custom dictionaries using legal xsd files
+    complying with legal documents in all countires
+    around the world.
     """
     config.out_file = out_file
     config.verbose = verbose
@@ -41,7 +48,8 @@ def cfdv32mx(config):
     File where the files will be written from document.json.
         cfdicli --out_file ./document.xml cfdv32mx
     """
-    # TODO: look for a secure option for eval. Or simply the CLI only should manage json?
+    # TODO: look for a secure option for eval.
+    #       Or simply the CLI only should manage json?
     # TODO: Implement json option also.
     dict_input = eval(config.in_file.read())
     invoice = cfdv32.get_invoice(dict_input)

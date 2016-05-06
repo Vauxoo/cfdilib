@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from suds.client import Client
 from urllib2 import URLError
+
+from suds.client import Client
 
 
 class Signatory(object):
@@ -10,8 +11,9 @@ class Signatory(object):
     In other countries it can be a different entity, private or public and use
     different kind of webservices technologies.
 
-    This is an object to be used as a helper, this should be overwritten if the
-    way we decided to sign (SOAP, xmlrpc, json, etc, etc) change in your country.
+    This is an object to be used as a helper, this should be overwritten
+    if the way we decided to sign (SOAP, xmlrpc, json, etc, etc)
+    change in your country.
 
     The default behavior is for the way Mexico do things.
     """
@@ -26,21 +28,24 @@ class Signatory(object):
 
     def _sign(self):
         try:
-            # The name of the service here will change depending of the signatory
-            # third party.
-            self.result = self.client.service.stamp(self.document, self.user, self.password)
+            # The name of the service here will
+            # change depending of the signatory third party.
+            self.result = self.client.service.stamp(
+                self.document, self.user, self.password)
         except Exception as e:
-            print e
+            print e  # pylint: disable=print-statement
 
     def sign(self, xml_doc):
         """Sign the document with a third party signatory.
 
         :param str xml_doc: Document self signed in plain xml
-        :returns answer: Answer is given from the signatory itself if connected.
+        :returns answer: Answer is given from the signatory
+            itself if connected.
         """
         try:
             self.client = Client(self.url)
         except ValueError as e:
             self.message = e.message
         except URLError:
-            self.message = 'The url you provided: %s could not be reached' % self.url
+            self.message = 'The url you provided: ' + \
+                '%s could not be reached' % self.url
