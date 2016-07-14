@@ -13,7 +13,8 @@ class Tools(object):
 
     @staticmethod
     def cache_it(url):
-        """Take an url which deliver a plain document and convert it to a temporary file
+        """Take an url which deliver a plain document
+        and convert it to a temporary file
         :param url: document origin url
         :return: local new absolute path
         """

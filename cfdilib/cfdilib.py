@@ -3,9 +3,11 @@ import os
 from cStringIO import StringIO
 from abc import ABCMeta, abstractmethod
 from tempfile import NamedTemporaryFile
+
 from lxml import etree
-from tools import tools
 from jinja2 import Environment, PackageLoader
+
+from .tools import tools
 
 
 class Struct(object):
@@ -22,36 +24,45 @@ class Struct(object):
 
 class BaseDocument:
     """An XML document following any format given an XSD file.
-    Due to avoid duplication of work we will delegate the error management
-    Of attributes to the xsd, then the `validate` method will make the job of
-    return the correct error, due to the standard managed on the invoice.
+    Due to avoid duplication of work we will delegate the
+    error management of attributes to the xsd, then the
+    `validate` method will make the job of return the correct
+    error, due to the standard managed on the invoice.
 
-    The template itself must comply with an specific xsd, this is needed to
-    simply pass a dictionary of terms used in the template convert them to
-    attributes of this Document object using whatever attributes comes from that xsd
+    The template itself must comply with an specific xsd,
+    this is needed to simply pass a dictionary of terms used in
+    the template convert them to
+    attributes of this Document object using whatever attributes
+    comes from that xsd
 
-    Then due to the template itself has all the structure of attributes
-    necessaries to comply with the xsd, theoretically the xsd should return the
-    logical error which we are not complying on such template, see cfdv32.xml template to see
-    how you should assembly a new version of this template, then set it to the
-    template_fname attribute and guala your dict will be magically validated
+    Then due to the template itself has all the structure of
+    attributes necessaries to comply with the xsd, theoretically
+    the xsd should return the logical error which
+    we are not complying on such template, see cfdv32.xml
+    template to see how you should assembly a new version
+    of this template, then set it to the template_fname attribute
+    and guala your dict will be magically validated
     and converted to an XML file.
 
     Why not assembly with simple lxml?
     ----------------------------------
 
-    Because it is more readable and configurable, it is always more simple
-    inherit a class and set an attribute than overwrite hundreds of methods
-    when it is a big xml.
+    Because it is more readable and configurable,
+    it is always more simple
+    inherit a class and set an attribute than overwrite
+    hundreds of methods when it is a big xml.
     """
 
     @abstractmethod
     def __init__(self, dict_document, debug_mode=False, cache=1000):
-        """Convert a dictionary invoice to a Class with a based xsd and xslt wlwment to be signed.
+        """Convert a dictionary invoice to a Class with a
+        based xsd and xslt wlwment to be signed.
 
-        :param dict dict_document: Dictionary with all entries you will need in your template.
+        :param dict dict_document: Dictionary with all entries
+            you will need in your template.
         :param bool debug_mode: If debugging or not.
-        :param int cache: Time in seconds the url given files will be cached on tmp folder.
+        :param int cache: Time in seconds the url given
+            files will be cached on tmp folder.
         """
         self.ups = False
         self.debug_mode = debug_mode
@@ -81,16 +92,17 @@ class BaseDocument:
         self.schema_fname = self.template_fname.replace('.xml', '.xsd')
 
     def set_xslt_fname(self):
-        """The same than template but with .xslt on templates folder this in case you want to use
-        it locally."""
+        """The same than template but with .xslt on templates
+        folder this in case you want to use it locally."""
         if not self.xslt_fname:
             self.xslt_fname = self.template_fname.replace('.xml', '.xslt')
         else:
             self.set_xslt()
 
     def guess_autoescape(self, template_name):
-        """Given a template Name I will gues using its extension if we should autoscape or not.
-        Defaul autoscaped extensions: ('html', 'xhtml', 'htm', 'xml')
+        """Given a template Name I will gues using its
+        extension if we should autoscape or not.
+        Default autoscaped extensions: ('html', 'xhtml', 'htm', 'xml')
         """
         if template_name is None or '.' not in template_name:
             return False
@@ -115,7 +127,8 @@ class BaseDocument:
         with open(xslt_path, 'r') as element:
             xslt = element.read()
             self.xslt_document = xslt
-            # In case of caching, the xslt_path will be from cahed and not from local
+            # In case of caching,
+            # the xslt_path will be from cahed and not from local
             self.xslt_fname = xslt_path
 
     @abstractmethod
@@ -125,7 +138,7 @@ class BaseDocument:
                           autoescape=self.guess_autoescape)
         return env.get_template(template_fname)
 
-    def validate(self, schema_str, xml_valid):  # TODO: be able to get doc for error given an xsd.
+    def validate(self, schema_str, xml_valid):
         """Compare the valid information on an xml from  given schema.
 
         :param str schema_str: content string from schema file.
@@ -133,6 +146,7 @@ class BaseDocument:
         :returns: If it is Valid or Not.
         :rtype: bool
         """
+        # TODO: be able to get doc for error given an xsd.
         schema_root = etree.XML(schema_str)
         schema = etree.XMLSchema(schema_root)
         xmlparser = etree.XMLParser(schema=schema)
@@ -148,9 +162,11 @@ class BaseDocument:
             return self.valid
 
     def set_xml(self):
-        """Set document xml just rendered already validated against xsd to be signed.
+        """Set document xml just rendered already
+        validated against xsd to be signed.
 
-        :params boolean debug_mode: Either if you want the rendered template to be saved either it
+        :params boolean debug_mode: Either if you want
+            the rendered template to be saved either it
         is valid or not with the given schema.
         :returns boolean: Either was valid or not the generated document.
         """
@@ -173,16 +189,20 @@ class BaseDocument:
             self.document_path = cached.name
 
     def get_element_from_clark(self, element):
-        """**Helper method:** Given a Clark's Notation `{url:schema}Element` element, return the
-        valid xpath on your xsd file, frequently it is not necesary overwrite this method but
-        different xsd from different sourcs can have different logic which I do not know now,
-        then simply take this as an example and set the correct xpath conversion in your project.
+        """**Helper method:** Given a Clark's Notation
+        `{url:schema}Element` element, return the
+        valid xpath on your xsd file, frequently
+        it is not necesary overwrite this method but
+        different xsd from different source
+        can have different logic which I do not know now,
+        then simply take this as an example and set the
+        correct xpath conversion in your project.
 
         :param str element: Element string following the Clark's Notation"""
         element = element.split('}')[-1]
         xpath_path = \
-            '//xs:element[@name="{element}"]/xs:annotation/xs:documentation'.format(
-                element=element)
+            '//xs:element[@name="{element}"]' + \
+            '/xs:annotation/xs:documentation'.format(element=element)
         return xpath_path
 
     def get_documentation(self, element, namespace=None, schema_str=None):
