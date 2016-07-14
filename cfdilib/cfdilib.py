@@ -220,6 +220,7 @@ class BaseDocument:
         """
         if namespace is None:
             namespace = {'xs': 'http://www.w3.org/2001/XMLSchema'}
+        import pdb; pdb.set_trace()
         schema_root = etree.parse(StringIO(self.schema))
         document = schema_root.xpath(self.get_element_from_clark(element),
                                      namespaces=namespace)
