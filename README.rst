@@ -1,5 +1,3 @@
-[![Build Status](https://magnum.travis-ci.com/Vauxoo/cfdilib.svg?token=t2GeXzDYVtKSZD0luOC073Iy0LVvzWvju&branch=master)](https://magnum.travis-ci.com/Vauxoo/cfdilib)
-
 =======================
 Xml documents generator
 =======================
