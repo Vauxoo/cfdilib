@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 import os
+from os.path import dirname
 from cStringIO import StringIO
 from abc import ABCMeta, abstractmethod
 from tempfile import NamedTemporaryFile
 
 from lxml import etree
-from jinja2 import Environment, PackageLoader
+from jinja2 import Environment, FileSystemLoader
 
 from .tools import tools
 
@@ -80,6 +81,10 @@ class BaseDocument:
         self.set_xml()
         self.set_xslt_fname()
         self.document_orginal = self.set_original()
+        self.template_fname = ''
+        self.schema_fname = self.template_fname.replace('.xml', '.xsd')
+        self.xslt_fname = self.template_fname.replace('.xml', '.xslt')
+        self.templates = os.path.join(dirname(__file__), 'templates')
 
     __metaclass__ = ABCMeta
 
@@ -111,8 +116,7 @@ class BaseDocument:
 
     @abstractmethod
     def set_schema(self, schema_fname):
-        testxml = os.path.join(os.path.dirname(__file__),
-                               'templates', schema_fname)
+        testxml = os.path.join(self.templates, schema_fname)
         with open(testxml, 'r') as element:
             schema = element.read()
         return schema
@@ -122,8 +126,7 @@ class BaseDocument:
         if self.xslt_fname and tools.is_url(self.xslt_fname):
             xslt_path = tools.cache_it(self.xslt_fname)
         elif self.xslt_fname:
-            xslt_path = os.path.join(os.path.dirname(__file__),
-                                     'templates', self.xslt_fname)
+            xslt_path = os.path.join(self.templates, self.xslt_fname)
         with open(xslt_path, 'r') as element:
             xslt = element.read()
             self.xslt_document = xslt
@@ -133,7 +136,8 @@ class BaseDocument:
 
     @abstractmethod
     def set_template(self, template_fname):
-        env = Environment(loader=PackageLoader('cfdilib', 'templates'),
+        self.templates = os.path.join(dirname(__file__), 'templates')
+        env = Environment(loader=FileSystemLoader(self.templates),
                           extensions=['jinja2.ext.autoescape'],
                           autoescape=self.guess_autoescape)
         return env.get_template(template_fname)
