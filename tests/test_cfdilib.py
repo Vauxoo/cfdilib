@@ -70,6 +70,10 @@ class TestCfdilib(unittest.TestCase):
         self.assertTrue(invoice.ups.message.find('Emisor') > 0,
                         'The expected failed entry Emisor was erroneous.')
 
+        invoice = cfdv32.get_invoice({})
+        self.assertFalse(invoice.ups,
+                         'An empty dict should give me the validation')
+
     def test_005_get_cfd_invalid_debugged(self):
         """With a given `invalid` dict an invoice
         object is created in debug_mode"""
