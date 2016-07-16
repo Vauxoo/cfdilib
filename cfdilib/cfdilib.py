@@ -7,6 +7,7 @@ from tempfile import NamedTemporaryFile
 
 from lxml import etree
 from jinja2 import Environment, FileSystemLoader
+from jinja2.exceptions import UndefinedError
 
 from .tools import tools
 
@@ -116,8 +117,8 @@ class BaseDocument:
 
     @abstractmethod
     def set_schema(self, schema_fname):
-        testxml = os.path.join(self.templates, schema_fname)
-        with open(testxml, 'r') as element:
+        test_xml = os.path.join(self.templates, schema_fname)
+        with open(test_xml, 'r') as element:
             schema = element.read()
         return schema
 
@@ -175,9 +176,12 @@ class BaseDocument:
         :returns boolean: Either was valid or not the generated document.
         """
         cached = NamedTemporaryFile(delete=False)
-        document = self.template.render(inv=self)
+        document = u''
+        try:
+            document = self.template.render(inv=self)
+        except UndefinedError as ups:
+            self.ups = ups
         valid = self.validate(self.schema, document)
-        self.document = False
         if not valid and self.debug_mode:
             self.document = document
         if valid:

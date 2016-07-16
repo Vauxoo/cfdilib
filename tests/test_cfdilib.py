@@ -62,7 +62,7 @@ class TestCfdilib(unittest.TestCase):
     def test_004_get_errored(self):
         """With a given invalid dict raise properly errors on ups object"""
         invoice = cfdv32.get_invoice(self.dict_invoice_basic_32_errored)
-        self.assertTrue(invoice.ups,
+        self.assertTrue(bool(invoice.ups),
                         'An invalid dictionary gave a '
                         'valid output, that is wrong.')
         # Ok it failed!, then we assert if
@@ -71,8 +71,8 @@ class TestCfdilib(unittest.TestCase):
                         'The expected failed entry Emisor was erroneous.')
 
         invoice = cfdv32.get_invoice({})
-        self.assertFalse(invoice.ups,
-                         'An empty dict should give me the validation')
+        self.assertTrue(bool(invoice.ups),
+                        'An empty dict should give me the validation')
 
     def test_005_get_cfd_invalid_debugged(self):
         """With a given `invalid` dict an invoice
