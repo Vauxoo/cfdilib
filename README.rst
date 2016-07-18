@@ -5,8 +5,8 @@ Xml documents generator
 .. image:: https://travis-ci.com/Vauxoo/cfdilib.svg?token=VAty1EWicYm2yKQxZptp&branch=master
     :target: https://travis-ci.com/Vauxoo/cfdilib
 
-.. image:: https://coveralls.io/repos/github/Vauxoo/cfdilib/badge.svg?t=7nEy31
-    :target: https://coveralls.io/github/Vauxoo/cfdilib
+.. image:: https://codecov.io/gh/Vauxoo/cfdilib/branch/master/graph/badge.svg?token=wcRGfPzSDy
+    :target: https://codecov.io/gh/Vauxoo/cfdilib
 
 
 Library to xml documents based on XSD files to manage situations where you need to sign such
