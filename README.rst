@@ -5,6 +5,9 @@ Xml documents generator
 .. image:: https://travis-ci.com/Vauxoo/cfdilib.svg?token=VAty1EWicYm2yKQxZptp&branch=master
     :target: https://travis-ci.com/Vauxoo/cfdilib
 
+.. image:: https://coveralls.io/repos/github/Vauxoo/cfdilib/badge.svg?t=7nEy31
+    :target: https://coveralls.io/github/Vauxoo/cfdilib
+
 
 Library to xml documents based on XSD files to manage situations where you need to sign such
 documents with a third party, then given a simple dictionary and a jinja2 template you will be
