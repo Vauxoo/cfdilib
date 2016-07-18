@@ -23,10 +23,14 @@ addons:
   apt:
     packages:
       - python-lxml
+      - python-cffi
+      - openssl
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
   - pip install -U tox jinja2 coveralls
+  # To fix insecureplatformwarning of urllib3 for coveralls command
+  - pip install -U pyopenssl ndg-httpsclient pyasn1
 
 # command to run tests, e.g. python setup.py test
 script:
