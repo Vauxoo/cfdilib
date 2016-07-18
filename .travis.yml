@@ -23,10 +23,14 @@ addons:
   apt:
     packages:
       - python-lxml
+      - openssl
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
+  - pip install -U pip
   - pip install -U tox jinja2 coveralls
+  # To fix insecureplatformwarning of urllib3 for coveralls command
+  - pip install -U pyopenssl ndg-httpsclient pyasn1
 
 # command to run tests, e.g. python setup.py test
 script:
@@ -35,8 +39,8 @@ script:
   - python test_usage.py
 
 after_success:
-  - cp ${TRAVIS_BUILD_DIR}/.coveralls.yml ${TRAVIS_BUILD_DIR}/.tox/$TOXENV/
-  - (cd ${TRAVIS_BUILD_DIR}/.tox/$TOXENV && coveralls)
+  - cp ${TRAVIS_BUILD_DIR}/.covera* ${TRAVIS_BUILD_DIR}/.tox/$TOXENV/
+  - (cd ${TRAVIS_BUILD_DIR}/.tox/$TOXENV && coverage report -m && coveralls)
 
 # After you create the Github repo and add it to Travis, run the
 # travis_pypi_setup.py script to finish PyPI deployment setup
