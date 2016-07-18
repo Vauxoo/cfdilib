@@ -1,0 +1,8 @@
+[report]
+include =
+    */cfdilib/cfdilib/*
+
+omit =
+    */test/*
+    */tests/*
+    *__init__.py
