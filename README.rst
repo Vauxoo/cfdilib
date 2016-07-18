@@ -2,8 +2,8 @@
 Xml documents generator
 =======================
 
-.. image:: https://travis-ci.com/Vauxoo/cfdilib.svg?token=VAty1EWicYm2yKQxZptp&branch=master
-    :target: https://travis-ci.com/Vauxoo/cfdilib
+.. image:: https://travis-ci.org/Vauxoo/cfdilib.svg?branch=master
+    :target: https://travis-ci.org/Vauxoo/cfdilib
 
 .. image:: https://codecov.io/gh/Vauxoo/cfdilib/branch/master/graph/badge.svg?token=wcRGfPzSDy
     :target: https://codecov.io/gh/Vauxoo/cfdilib
