@@ -1,0 +1,88 @@
+{
+    "account": False,
+    "amount_total": 4610.0,
+    "certificate": "20001000000200000274",
+    "certificate_number": "20001000000200000274",
+    "currency": "USD",
+    "date_invoice_tz": "2016-07-18T07:31:59",
+    "document_type": "ingreso",
+    "emitter_colony": False,
+    "emitter_country": "M\u00e9xico",
+    "emitter_domicile": "YourCompany",
+    "emitter_exterior_no": False,
+    "emitter_fiscal_position": "Personas morales del r\u00e9gimen general",
+    "emitter_interior_no": False,
+    "emitter_issue_on_colony": "Futurama Monte\u00e9rrey",
+    "emitter_issue_on_country": "M\u00e9xico",
+    "emitter_issue_on_exterior_no": 123,
+    "emitter_issue_on_interior_no": "N/A",
+    "emitter_issue_on_locality": "Guanajuato",
+    "emitter_issue_on_municipality": "No se que iria",
+    "emitter_issue_on_name": "Vauxoo SA de CV",
+    "emitter_issue_on_rfc": "VAU111017CG9",
+    "emitter_issue_on_state": "Guanajuato",
+    "emitter_issue_on_street": "Linuk 119",
+    "emitter_issue_on_zip": "37205",
+    "emitter_locality": False,
+    "emitter_municipality": False,
+    "emitter_name": "YourCompany",
+    "emitter_rfc": "VEBD700616Q44",
+    "emitter_state": "Guanajuato",
+    "emitter_street": "1725 Slough Ave.",
+    "emitter_zip": "18540",
+    "invoice_lines": [
+        {
+            "code": "XYZ",
+            "name": "CPU XYZ",
+            "price_unit": 50.0,
+            "quantity": 1.0,
+            "subtotal_wo_discount": 50.0,
+            "unit": "Unidad"
+        },
+        {
+            "code": "XYZ",
+            "name": "CPU XYZ",
+            "price_unit": 50.0,
+            "quantity": 1.0,
+            "subtotal_wo_discount": 50.0,
+            "unit": "Unidad"
+        }
+    ],
+    "number": "INV/2016/0001",
+    "rate": 0.0,
+    "receiver_colony": False,
+    "receiver_country": "France",
+    "receiver_exterior_no": False,
+    "receiver_interior_no": False,
+    "receiver_locality": "Col. Deitz",
+    "receiver_municipality": False,
+    "receiver_name": "Camptocamp",
+    "receiver_rfc": False,
+    "receiver_state": False,
+    "receiver_street": "93, Press Avenue",
+    "receiver_zip": "73377",
+    "serie": "INV/%(range_year)s/",
+    "subtotal_wo_discount": 4610.0,
+    "taxes": {
+        "total_transferred": 1.0,
+        "total_withhold": 1.0,
+        "transferred": [
+            {
+                "amount": 3.0,
+                "name": "IVA",
+                "rate": 1.0
+            }
+        ],
+        "withholding": [
+            {
+                "amount": 2.0,
+                "name": "IVA"
+            }
+        ]
+    },
+    "you_can_use_unused_in_xsd": {
+        "with_2_levels_or_more": {
+            "third_level": "100"
+        }
+    }
+}

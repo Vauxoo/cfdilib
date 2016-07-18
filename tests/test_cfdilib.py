@@ -8,6 +8,7 @@ test_cfdilib
 Tests for `cfdilib` module.
 Tests for `cfdv32` module.
 """
+import json
 
 from os.path import join, dirname
 import unittest
@@ -30,6 +31,8 @@ class TestCfdilib(unittest.TestCase):
             self._get_test_file('basic_invoice_32.txt'))
         self.dict_invoice_basic_32_errored = eval(
             self._get_test_file('basic_invoice_32_errored.txt'))
+        self.dict_invoice_basic_32_false = eval(
+            self._get_test_file('basic_invoice_32_false.txt'))
         self.real_document_xml = join(
             dirname(cfdilib.__file__), "..", "tests", "demo", 'cfdv32.xml')
 
@@ -73,6 +76,11 @@ class TestCfdilib(unittest.TestCase):
         invoice = cfdv32.get_invoice({})
         self.assertTrue(bool(invoice.ups),
                         'An empty dict should give me the validation')
+
+        invoice = cfdv32.get_invoice(self.dict_invoice_basic_32_false)
+        self.assertNotIn('False', invoice.ups.message,
+                         'Passing a False value return a False string which is'
+                         'incorrect  %s ' % invoice.ups.message)
 
     def test_005_get_cfd_invalid_debugged(self):
         """With a given `invalid` dict an invoice

@@ -20,6 +20,8 @@ class Struct(object):
         """
         self.__dict__.update(adict)
         for k, v in adict.items():
+            if self.__dict__[k] is False or self.__dict__[k] is None:
+                self.__dict__[k] = unicode()
             if isinstance(v, dict):
                 self.__dict__[k] = Struct(v)
 
@@ -77,6 +79,8 @@ class BaseDocument:
         self.set_schema(self.schema_fname)
         self.__dict__.update(dict_document)
         for k, v in dict_document.items():
+            if self.__dict__[k] is False or self.__dict__[k] is None:
+                self.__dict__[k] = unicode()
             if isinstance(v, dict):
                 self.__dict__[k] = Struct(v)
         self.set_xml()
