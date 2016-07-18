@@ -1,6 +1,9 @@
+[paths]
+source = cfdilib
+
 [report]
 include =
-    */cfdilib/cfdilib/*
+    */cfdilib/*
 
 omit =
     */test/*
