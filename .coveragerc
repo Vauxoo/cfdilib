@@ -3,7 +3,7 @@ source = cfdilib
 
 [report]
 include =
-    */cfdilib/*
+    cfdilib/*
 
 omit =
     */test/*
