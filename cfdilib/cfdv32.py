@@ -14,8 +14,6 @@ class CFDv32(BaseDocument):
         self.global_namespace = 'http://www.sat.gob.mx/sitio_internet/cfd'
         self.set_template(self.template_fname)
         super(CFDv32, self).__init__(dict_invoice, debug_mode=debug_mode)
-        # This method must be called from the inherited
-        #   __init__ always AFTER the super.
 
     def set_template(self, template_fname):
         self.template = super(CFDv32, self).set_template(template_fname)
