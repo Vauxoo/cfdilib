@@ -21,7 +21,7 @@ class Struct(object):
         self.__dict__.update(adict)
         for k, v in adict.items():
             if self.__dict__[k] is False or self.__dict__[k] is None:
-                self.__dict__[k] = unicode()
+                self.__dict__[k] = u'No Suministrado'
             if isinstance(v, dict):
                 self.__dict__[k] = Struct(v)
 
@@ -71,7 +71,7 @@ class BaseDocument:
         self.ups = False
         self.debug_mode = debug_mode
         self.schema_url = None
-        self.document = None
+        self.document = unicode()
         self.document_path = None
         self.xslt_path = None
         self.xslt_document = None
@@ -80,7 +80,7 @@ class BaseDocument:
         self.__dict__.update(dict_document)
         for k, v in dict_document.items():
             if self.__dict__[k] is False or self.__dict__[k] is None:
-                self.__dict__[k] = unicode()
+                self.__dict__[k] = u'No Suministrado'
             if isinstance(v, dict):
                 self.__dict__[k] = Struct(v)
         self.set_xml()
@@ -170,6 +170,14 @@ class BaseDocument:
                 self.valid = True
             return self.valid
 
+    def clean_up(self, document):
+        # TODO: This method should remove all empty attributes to left only
+        # the required ones for failing and avoid put dozens of IF into the
+        # template Not used yet..
+        for bad in tree.xpath("//fruit[@state=\'rotten\']"):
+            bad.getparent().remove(bad)
+        return et.tostring(tree, pretty_print=True, xml_declaration=True)
+
     def set_xml(self):
         """Set document xml just rendered already
         validated against xsd to be signed.
@@ -185,8 +193,10 @@ class BaseDocument:
             document = self.template.render(inv=self)
         except UndefinedError as ups:
             self.ups = ups
+
+        # TODO: Here should be called the cleanup 'Just before the validation'.
         valid = self.validate(self.schema, document)
-        if not valid and self.debug_mode:
+        if not valid and self.debug_mode or document:
             self.document = document
         if valid:
             document = etree.XML(document)
