@@ -196,8 +196,7 @@ class BaseDocument:
 
         # TODO: Here should be called the cleanup 'Just before the validation'.
         valid = self.validate(self.schema, document)
-        if not valid and self.debug_mode or document:
-            self.document = document
+        self.document = document
         if valid:
             document = etree.XML(document)
             self.document = etree.tostring(document,
