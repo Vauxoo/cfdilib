@@ -3,20 +3,27 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Mexico CFDI Lib's documentation!
-===========================================
+.. include:: ../README.rst
 
-Contents:
+Documentation
+=============
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
-   readme
    installation
    usage
    contributing
    authors
    history
+
+Api
+===
+
+.. toctree::
+   :maxdepth: 2
+
+   modules
 
 Indices and tables
 ==================

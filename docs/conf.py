@@ -17,6 +17,8 @@ import sys
 import os
 
 import cfdilib
+# import sphinx_bootstrap_theme
+import sphinx_theme_pd
 # If extensions (or modules to document with autodoc) are in another
 # directory, add these directories to sys.path here. If the directory is
 # relative to the documentation root, use os.path.abspath to make it
@@ -54,8 +56,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Mexico CFDI Lib'
-copyright = u'2016, Vauxoo OpenSource Specialists.'
+project = u'CFDI Lib'
+copyright = u'2016, Vauxoo OpenSource Specialists'
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout
@@ -109,8 +111,17 @@ pygments_style = 'sphinx'
 # -- Options for HTML output -------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
-# a list of builtin themes.
-html_theme = 'default'  # TODO: pick and hack odoo's theme
+# a list of builtin themes.import sphinx_theme_pd
+html_theme = "sphinx_theme_pd"
+html_theme_path = [sphinx_theme_pd.get_html_theme_path()]
+# html_theme = 'bootstrap'
+# html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
+# (Optional) Logo. Should be small enough to fit the navbar (ideally 24x24).
+# Path should be relative to the ``_static`` files directory.
+# html_logo = "logo.png"
+
+# Theme options are theme-specific and customize the look and feel of a
+# theme further.
 
 # Theme options are theme-specific and customize the look and feel of a
 # theme further.  For a list of options available for each theme, see the
@@ -209,7 +220,7 @@ latex_elements = {
 latex_documents = [
     ('index', 'cfdilib.tex',
      u'Mexico CFDI Lib Documentation',
-     u'Vauxoo OpenSource Specialists.', 'manual'),
+     u'Vauxoo OpenSource Specialists', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at
@@ -240,7 +251,7 @@ latex_documents = [
 man_pages = [
     ('index', 'cfdilib',
      u'Mexico CFDI Lib Documentation',
-     [u'Vauxoo OpenSource Specialists.'], 1)
+     [u'Vauxoo OpenSource Specialists'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -255,7 +266,7 @@ man_pages = [
 texinfo_documents = [
     ('index', 'cfdilib',
      u'Mexico CFDI Lib Documentation',
-     u'Vauxoo OpenSource Specialists.',
+     u'Vauxoo OpenSource Specialists',
      'cfdilib',
      'One line description of project.',
      'Miscellaneous'),

@@ -48,8 +48,7 @@ class BaseDocument:
     and guala your dict will be magically validated
     and converted to an XML file.
 
-    Why not assembly with simple lxml?
-    ----------------------------------
+    **Why not assembly with simple lxml?**
 
     Because it is more readable and configurable,
     it is always more simple

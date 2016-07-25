@@ -2,15 +2,11 @@
 #
 
 # You can set these variables from the command line.
-SPHINXOPTS    =
+SPHINXOPTS    = -q -t solutions
 SPHINXBUILD   = sphinx-build
 PAPER         =
 BUILDDIR      = _build
-
-# User-friendly check for sphinx-build
-ifeq ($(shell which $(SPHINXBUILD) >/dev/null 2>&1; echo $$?), 1)
-$(error The '$(SPHINXBUILD)' command was not found. Make sure you have Sphinx installed, then set the SPHINXBUILD environment variable to point to the full path of the '$(SPHINXBUILD)' executable. Alternatively you can add the directory with the executable to your PATH. If you don't have Sphinx installed, grab it from http://sphinx-doc.org/)
-endif
+TRAVISDIR     = ../out
 
 # Internal variables.
 PAPEROPT_a4     = -D latex_paper_size=a4
@@ -18,12 +14,14 @@ PAPEROPT_letter = -D latex_paper_size=letter
 ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 # the i18n builder cannot share the environment and doctrees with the others
 I18NSPHINXOPTS  = $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
+GIT_SETTED = $(shell git config user.email)
 
-.PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest gettext
+.PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest gettext deploy html-es clone-gh-pages set-travis-git-config push-gh-pages pull-gh-pages
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
 	@echo "  html       to make standalone HTML files"
+	@echo "  html-es       to make standalone HTML files in Spanish"
 	@echo "  dirhtml    to make HTML files named index.html in directories"
 	@echo "  singlehtml to make a single large HTML file"
 	@echo "  pickle     to make pickle files"
@@ -34,20 +32,63 @@ help:
 	@echo "  epub       to make an epub"
 	@echo "  latex      to make LaTeX files, you can set PAPER=a4 or PAPER=letter"
 	@echo "  latexpdf   to make LaTeX files and run them through pdflatex"
-	@echo "  latexpdfja to make LaTeX files and run them through platex/dvipdfmx"
 	@echo "  text       to make text files"
 	@echo "  man        to make manual pages"
 	@echo "  texinfo    to make Texinfo files"
 	@echo "  info       to make Texinfo files and run them through makeinfo"
 	@echo "  gettext    to make PO message catalogs"
 	@echo "  changes    to make an overview of all changed/added/deprecated items"
-	@echo "  xml        to make Docutils-native XML files"
-	@echo "  pseudoxml  to make pseudoxml-XML files for display purposes"
 	@echo "  linkcheck  to check all external links for integrity"
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
+	@echo "  server     Serve compiled docuementation throught 8000 port"
+	@echo "  clone-gh-pages     Clone your gh-pages from the repository given to prepare the deploy"
+	@echo "  pull-gh-pages      Update your gh-pages from the repository given to prepare the deploy"
+	@echo "  set-travis-git-config   helper to set the travis user when auto deploy"
+	@echo "  deploy          Compile html and deploy to gh-pages and or master on a github repository."
+	@echo "                  Considere that you need to have this global variables setted."
+	@echo "                  ---------------------------------------------------------------------------------------------------------"
+	@echo "                  GH_REF Reference to github project (without transport protocol defined) i.e.: github.com/user/project.git"
+	@echo "                  GH_BRANCH 'master' for personal pages and 'gh-pages' for project pages"
+	@echo "                  GH_COMMITER_EMAIL commiter email to commit the autocompiled element."
+	@echo "                  GH_COMMITER_NAME commiter email to commit the autocompiled element."
+	@echo "                  GH_TOKEN definition:"
+	@echo "                  rtfd: https://help.github.com/articles/creating-an-access-token-for-command-line-use/"
+	@echo "                  Considere that you can secure it for travis porpose your token rtfd: "
+	@echo "                  https://docs.travis-ci.com/user/encryption-keys/"
+	@echo "  push-gh-pages   Helper to push to gh-pages with global variables on .travis.yml"
+
+pull-gh-pages:
+	(cd $(BUILDDIR)/travis; git pull origin $(GH_BRANCH))
+	@echo "Succesfully Updated $(GH_BRANCH)"
+
+clone-gh-pages:
+	git clone https://$(GH_REF) --branch=$(GH_BRANCH) $(BUILDDIR)/travis;
+	@echo "Succesfully Clonned from gh-pages"
+
+set-travis-git-config:
+	(cd $(BUILDDIR)/travis; git config user.email $(GH_COMMITER_EMAIL); git config user.name $(GH_COMMITER_NAME))
+	@echo "Git parameters Setted."
+
+push-gh-pages:
+	(cd $(BUILDDIR)/travis; git add .; git commit -m "Automatically built in travis, Build number: $(TRAVIS_BUILD_NUMBER) ")
+	(cd $(BUILDDIR)/travis; git push --force --quiet "https://$(GH_TOKEN)@$(GH_REF)" $(GH_BRANCH):$(GH_BRANCH) > /dev/null 2>&1)
+	@echo "Succesfully pushed"
+
+deploy:
+	test -d $(BUILDDIR)/travis && $(MAKE) pull-gh-pages || $(MAKE) clone-gh-pages
+	$(MAKE) html-es
+	touch $(BUILDDIR)/travis/.nojekyll;
+	rsync -rv --exclude=.git $(BUILDDIR)/html/* $(BUILDDIR)/travis/
+	$(if $(findstring @,$(GIT_SETTED)), @echo 'Using global parameters already Setted', $(MAKE) set-travis-git-config)
+	$(MAKE) push-gh-pages
+	@echo 'Commited and deployed'
+
+html-es:
+	sphinx-intl build
+	$(MAKE) -e SPHINXOPTS="-D language='es'" html
 
 clean:
-	rm -rf $(BUILDDIR)/*
+	-rm -rf $(BUILDDIR)/*
 
 html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
@@ -56,6 +97,7 @@ html:
 
 dirhtml:
 	$(SPHINXBUILD) -b dirhtml $(ALLSPHINXOPTS) $(BUILDDIR)/dirhtml
+	sed -i '/-99999/d' _build/dirhtml/_static/flasky.css
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/dirhtml."
 
@@ -85,17 +127,17 @@ qthelp:
 	@echo
 	@echo "Build finished; now you can run "qcollectiongenerator" with the" \
 	      ".qhcp project file in $(BUILDDIR)/qthelp, like this:"
-	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/cfdilib.qhcp"
+	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/OpenERPTechnicalDocumentation.qhcp"
 	@echo "To view the help file:"
-	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/cfdilib.qhc"
+	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/OpenERPTechnicalDocumentation.qhc"
 
 devhelp:
 	$(SPHINXBUILD) -b devhelp $(ALLSPHINXOPTS) $(BUILDDIR)/devhelp
 	@echo
 	@echo "Build finished."
 	@echo "To view the help file:"
-	@echo "# mkdir -p $$HOME/.local/share/devhelp/cfdilib"
-	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/cfdilib"
+	@echo "# mkdir -p $$HOME/.local/share/devhelp/OpenERPTechnicalDocumentation"
+	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/OpenERPTechnicalDocumentation"
 	@echo "# devhelp"
 
 epub:
@@ -114,12 +156,6 @@ latexpdf:
 	$(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) $(BUILDDIR)/latex
 	@echo "Running LaTeX files through pdflatex..."
 	$(MAKE) -C $(BUILDDIR)/latex all-pdf
-	@echo "pdflatex finished; the PDF files are in $(BUILDDIR)/latex."
-
-latexpdfja:
-	$(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) $(BUILDDIR)/latex
-	@echo "Running LaTeX files through platex and dvipdfmx..."
-	$(MAKE) -C $(BUILDDIR)/latex all-pdf-ja
 	@echo "pdflatex finished; the PDF files are in $(BUILDDIR)/latex."
 
 text:
@@ -166,12 +202,10 @@ doctest:
 	@echo "Testing of doctests in the sources finished, look at the " \
 	      "results in $(BUILDDIR)/doctest/output.txt."
 
-xml:
-	$(SPHINXBUILD) -b xml $(ALLSPHINXOPTS) $(BUILDDIR)/xml
-	@echo
-	@echo "Build finished. The XML files are in $(BUILDDIR)/xml."
-
 pseudoxml:
 	$(SPHINXBUILD) -b pseudoxml $(ALLSPHINXOPTS) $(BUILDDIR)/pseudoxml
 	@echo
 	@echo "Build finished. The pseudo-XML files are in $(BUILDDIR)/pseudoxml."
+
+serve:
+	(cd $(BUILDDIR)/html; python -m SimpleHTTPServer 8000)
