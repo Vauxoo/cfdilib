@@ -95,17 +95,17 @@ class TestCfdilib(unittest.TestCase):
         """With a file it is downloaded and cached in a temporary file"""
         # TODO: Mock this
         downloaded = tools.cache_it(
-            'http://www.sat.gob.mx/sitio_internet/cfd/3/cadenaoriginal_3_2/cadenaoriginal_3_2.xslt')  # noqa
+            'http://s3.vauxoo.com/cadenaoriginal_3_2/cadenaoriginal_3_2.xslt')
         content = open(downloaded).read()
         self.assertTrue(content.find('se establece que la salida') > 0,
                         'I read the content of a cached file and '
                         'the result was not correct.')
 
-    def test_006_xml2xslt(self):
+    def test_007_cache(self):
         """With a file it is downloaded and cached in a temporary file"""
         # TODO: Mock this
         downloaded = tools.cache_it(
-            'http://www.sat.gob.mx/sitio_internet/cfd/3/cadenaoriginal_3_2/cadenaoriginal_3_2.xslt')  # noqa
+            'http://s3.vauxoo.com/cadenaoriginal_3_2/cadenaoriginal_3_2.xslt')
         content_xslt = downloaded
         content_xml = self.real_document_xml
         converted = tools.get_original(content_xml, content_xslt)
@@ -113,6 +113,9 @@ class TestCfdilib(unittest.TestCase):
             converted,
             'I read the content of a cached file and the result '
             'was not correct.')
+        self.assertTrue(len(tools.cached) > 1,
+                        'Cache dictionary was not cached properly')
+
 
 if __name__ == '__main__':
     import sys

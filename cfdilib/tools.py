@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
-import urllib2
-from tempfile import NamedTemporaryFile
-from lxml import etree
+import logging
 import re
 import time
+import urllib2
+
+from tempfile import NamedTemporaryFile
+from lxml import etree
+from os.path import isfile
 from functools import wraps
+
+_logger = logging.getLogger(__name__)
 
 
 def retry(exception_to_check, tries=4, delay=3, back_off=2, logger=None):
@@ -51,39 +56,59 @@ def retry(exception_to_check, tries=4, delay=3, back_off=2, logger=None):
 
     return deco_retry
 
+
 class Tools(object):
+
+    cached = {}
 
     @staticmethod
     def is_url(element_name):
         return element_name.startswith('http')
 
-    @staticmethod
     @retry(urllib2.URLError, tries=3, delay=3, back_off=2)
-    def cache_it(url):
-        """Take an url which deliver a plain document
-        and convert it to a temporary file
+    def cache_it(self, url):
+        """Take an url which deliver a plain document  and convert it to a
+        temporary file, this document is an xslt file expecting contains all
+        xslt definitions, then the cache process is recursive.
+
         :param url: document origin url
-        :return: local new absolute path
+        :return file path: local new absolute path
         """
-        def cache_it(url):
+        def cache_it(_url):
             cached = NamedTemporaryFile(delete=False)
             named = cached.name
+            _response = urllib2.urlopen(_url)
+            _content = _response.read()
             with cached as cache:
-                cache.write(content)
-            return named
-        response = urllib2.urlopen(url)
-        content = response.read()
+                cache.write(_content)
+            self.cached.update({_url: named})
+            return _content, named
+
+        # If on this runtime it is cached do not cache it again.
+        if self.cached.get(url) and isfile(self.cached[url]):
+            return self.cached[url]
+
         internal = 0
-        if url.endswith('xslt'):
-            # TODO: unwire this to xslt, but usefull for know
-            # to cache only the xslt which is the know one.
+
+        # TODO: unwire this to xslt, but usefull for know
+        if url.endswith('xslt') and not internal:
+
+            # Opening the first file just the first time.
+
+            response = urllib2.urlopen(url)
+            content = response.read()
+
+            # Find all urls in the main xslt file.
+
             urls = re.findall(r'href=[\'"]?([^\'" >]+)', content)
-            if not internal:
-                for u in urls:
-                    internal += 1
-                    _file = cache_it(u)
-                    content.replace(u, _file)
-        return cache_it(url)
+
+            # Mapping all internal url in the file to local cached files.
+
+            for u in urls:
+                internal += 1
+                content, _file = cache_it(u)
+                content.replace(u, _file)
+        return cache_it(url)[1]
 
     @staticmethod
     def get_original(document, xslt):
