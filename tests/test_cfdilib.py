@@ -8,9 +8,9 @@ test_cfdilib
 Tests for `cfdilib` module.
 Tests for `cfdv32` module.
 """
-import json
 
 from os.path import join, dirname
+from os import environ
 import unittest
 
 from cfdilib import cfdilib, cfdv32
@@ -25,6 +25,12 @@ class TestCfdilib(unittest.TestCase):
             return data_file.read()
 
     def setUp(self):
+        self.test_url_plain = 'http://www.textfiles.com/ufo/bc_grav1.txt'
+        self.s3_url_plain = 'http://s3.vauxoo.com/ufo/bc_grav1.txt'
+        # This is the xslt original in order to force the saving recursive in
+        # amazon s3 when local.
+        self.cadena = 'http://www.sat.gob.mx/sitio_internet/cfd/3/cadenaoriginal_3_2/cadenaoriginal_3_2.xslt'
+        self.cadena_travis = tools.s3_url('http://s3.vauxoo.com/sitio_internet/cfd/3/cadenaoriginal_3_2/cadenaoriginal_3_2.xslt')
         self.test_data_dir = join(
             dirname(cfdilib.__file__), "..", "tests", "demo")
         self.dict_invoice_basic_32 = eval(
@@ -35,6 +41,8 @@ class TestCfdilib(unittest.TestCase):
             self._get_test_file('basic_invoice_32_false.txt'))
         self.real_document_xml = join(
             dirname(cfdilib.__file__), "..", "tests", "demo", 'cfdv32.xml')
+        self.test_plain = join(
+            dirname(cfdilib.__file__), "..", "tests", "demo", "hello.txt")
 
     def tearDown(self):
         pass
@@ -46,7 +54,6 @@ class TestCfdilib(unittest.TestCase):
                 '{http://www.sat.gob.mx/cfd/3}'
                 'Impuestos')
         self.assertTrue(True)  # TODO: Find the proper search element syntax
-
 
     def test_002_get_cfd_debugged(self):
         """With a given valid dict an
@@ -94,8 +101,7 @@ class TestCfdilib(unittest.TestCase):
     def test_006_download_file(self):
         """With a file it is downloaded and cached in a temporary file"""
         # TODO: Mock this
-        downloaded = tools.cache_it(
-            'http://s3.vauxoo.com/cadenaoriginal_3_2/cadenaoriginal_3_2.xslt')
+        downloaded = tools.cache_it(self.cadena_travis)
         content = open(downloaded).read()
         self.assertTrue(content.find('se establece que la salida') > 0,
                         'I read the content of a cached file and '
@@ -104,8 +110,7 @@ class TestCfdilib(unittest.TestCase):
     def test_007_cache(self):
         """With a file it is downloaded and cached in a temporary file"""
         # TODO: Mock this
-        downloaded = tools.cache_it(
-            'http://s3.vauxoo.com/cadenaoriginal_3_2/cadenaoriginal_3_2.xslt')
+        downloaded = tools.cache_it(self.cadena_travis)
         content_xslt = downloaded
         content_xml = self.real_document_xml
         converted = tools.get_original(content_xml, content_xslt)
@@ -115,6 +120,33 @@ class TestCfdilib(unittest.TestCase):
             'was not correct.')
         self.assertTrue(len(tools.cached) > 1,
                         'Cache dictionary was not cached properly')
+
+    def test_008_s3(self):
+        """Cache on amazon is working properly"""
+        if not environ.get('TRAVIS') == 'true':
+            # This set of tests can be run just locally with properly set
+            # amazon credentials, this will synchronize the xsd files
+            # (and others) it does not make sense in travis.
+            url = self.test_url_plain
+            url_on_s3 = self.s3_url_plain
+            new_url = tools.cache_s3(url, self.test_plain)
+            self.assertEqual(new_url, url_on_s3,
+                             'The url on amazon was not setted properly '
+                             'got %s' % new_url)
+            new_url = tools.cache_s3(url_on_s3, self.test_plain)
+            self.assertEqual(new_url, url_on_s3,
+                             'The url on amazon wired not return what I expected'
+                             ' properly got %s' % new_url)
+
+            check_s3 = tools.check_s3('NOTEXISTSORNOTPROPERACL', 'url/no/exists')
+            self.assertFalse(check_s3, 'checking a non existing bucket fails')
+            check_s3 = tools.check_s3('s3.vauxoo.com', 'url/no/exists')
+            self.assertFalse(check_s3, 'checking a non existing element fails')
+
+    def test_008_force_s3_creation(self):
+        """Updating XSD of CFDIv32 Only local ignored in travis"""
+        # Moved to script in root folder.
+        pass
 
 
 if __name__ == '__main__':

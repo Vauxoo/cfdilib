@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .cfdilib import BaseDocument
+from .tools import tools
 
 
 class CFDv32(BaseDocument):
@@ -9,8 +10,11 @@ class CFDv32(BaseDocument):
 
     def __init__(self, dict_invoice, debug_mode=False):
         self.template_fname = 'cfdv32.xml'
+        # We explicitly cached into s3 with the local test then ensure use
+        # the s3 url to use our cache. remove the tools.s3_url if you want to
+        # load first in the future
         self.xslt_fname = \
-            'http://www.sat.gob.mx/sitio_internet/cfd/3/cadenaoriginal_3_2/cadenaoriginal_3_2.xslt'  # noqa
+            tools.s3_url('http://www.sat.gob.mx/sitio_internet/cfd/3/cadenaoriginal_3_2/cadenaoriginal_3_2.xslt')  # noqa
         self.global_namespace = 'http://www.sat.gob.mx/sitio_internet/cfd'
         self.set_template(self.template_fname)
         super(CFDv32, self).__init__(dict_invoice, debug_mode=debug_mode)
