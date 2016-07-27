@@ -24,7 +24,7 @@ test_requirements = [
 
 setup(
     name='cfdilib',
-    version='0.1.7',
+    version='0.2.0',
     description="Library to manage xml CDFI from " +
     "python and sign with several pacs.",
     long_description=readme + '\n\n' + history,
