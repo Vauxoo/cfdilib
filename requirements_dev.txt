@@ -15,3 +15,7 @@ suds
 # pyopenssl
 jinja2
 lxml
+
+# To use tools related to sync some things with s3.
+
+boto3

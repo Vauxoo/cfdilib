@@ -20,7 +20,10 @@ class Struct(object):
         """
         self.__dict__.update(adict)
         for k, v in adict.items():
-            if self.__dict__[k] is False or self.__dict__[k] is None:
+            if self.__dict__[k] is False or self.__dict__[k] is None:  # pragma: no cover  # noqa
+                # I did not find a use case hereto test it but it is necessary
+                # to left there when other recursive structure comes in
+                # that's why the no cover, remove this comment if you find one.
                 self.__dict__[k] = u'NA'
             if isinstance(v, dict):
                 self.__dict__[k] = Struct(v)
@@ -103,10 +106,7 @@ class BaseDocument:
     def set_xslt_fname(self):
         """The same than template but with .xslt on templates
         folder this in case you want to use it locally."""
-        if not self.xslt_fname:
-            self.xslt_fname = self.template_fname.replace('.xml', '.xslt')
-        else:
-            self.set_xslt()
+        self.set_xslt()
 
     def guess_autoescape(self, template_name):
         """Given a template Name I will gues using its
@@ -129,8 +129,6 @@ class BaseDocument:
     def set_xslt(self):
         if self.xslt_fname and tools.is_url(self.xslt_fname):
             xslt_path = tools.cache_it(self.xslt_fname)
-        elif self.xslt_fname:
-            xslt_path = os.path.join(self.templates, self.xslt_fname)
         with open(xslt_path, 'r') as element:
             xslt = element.read()
             self.xslt_document = xslt
@@ -168,14 +166,6 @@ class BaseDocument:
             else:
                 self.valid = True
             return self.valid
-
-    def clean_up(self, document):
-        # TODO: This method should remove all empty attributes to left only
-        # the required ones for failing and avoid put dozens of IF into the
-        # template Not used yet..
-        for bad in tree.xpath("//fruit[@state=\'rotten\']"):
-            bad.getparent().remove(bad)
-        return et.tostring(tree, pretty_print=True, xml_declaration=True)
 
     def set_xml(self):
         """Set document xml just rendered already
