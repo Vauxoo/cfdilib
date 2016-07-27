@@ -133,7 +133,14 @@ class Tools(object):
 
         return created_url
 
-    def check_s3(self, bucket, element):
+    def check_s3(self, bucket, element):  # pragma: no cover
+        """This method is a helper con `cache_s3`.
+        Read method `cache_s3` for more information.
+
+        :param bucket:
+        :param element:
+        :return:
+        """
         session = boto3.Session(profile_name=self.profile_name)
         s3 = session.resource('s3')
 
@@ -153,15 +160,8 @@ class Tools(object):
         else:
             return True
 
-    def cache_s3(self, url, named):
-        """This will make a copy of the cache into amazon S3 Domain passed as
-        parameter, if no domain then this will return the same url and the
-        original file will be the one used.
-
-        The ACL related to this will be the global ones configured into the
-        environment, if not ACL this will raise a NoS3Credentials.
-
-        Basically this is not to deploy automatically this is to be run once
+    def cache_s3(self, url, named):  # pragma: no cover
+        """Basically this is not to deploy automatically this is to be run once
         all is properly defined to catch the xsd in your own S3 instance and
         avoid third party (like government servers) failure, trying to manage
         the cache transparently to the user.
@@ -170,9 +170,6 @@ class Tools(object):
         related with xsd and invoices, and this probably is the same in other
         governmental institutions.
 
-        technical Note: Even if the tries are looking nested, this is perfect
-        valid for this case https://docs.python.org/3/glossary.html#term-eafp.
-
         :param url: Element path to be cached.
         :type url: str
         :param named: Local path with the file already downloaded.
@@ -180,7 +177,14 @@ class Tools(object):
 
         :return:
         """
-
+        # **Technical Notes:**
+        #
+        # Even if the tries are looking nested, this is perfect valid for
+        # this case:
+        # https://docs.python.org/3/glossary.html#term-eafp.
+        #
+        # The Coverage was excluded in order to avoid decrease it because an
+        # unused tool.
         url_parsed = urlparse(url)
         if self.domain == urlparse(url).netloc:
             # If I am asking for the same domain it is probably because it
