@@ -15,7 +15,11 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
 requirements = [
-    # TODO: put package requirements here
+    "boto3",
+    "click",
+    "jinja2",
+    # "lxml",  # Even if we need this in ubuntu you need use the system site
+    #  package.
 ]
 
 test_requirements = [
