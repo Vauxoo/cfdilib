@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import logging
 import boto3
 import re
@@ -50,7 +51,7 @@ def retry(exception_to_check, tries=4, delay=3, back_off=2, logger=None):  # pra
                     if logger:
                         logger.warning(msg)
                     else:
-                        print msg
+                        print(msg)
                     time.sleep(mdelay)
                     mtries -= 1
                     mdelay *= back_off
@@ -103,7 +104,7 @@ class Tools(object):
             cache.write(content)
 
         created_url = self.cache_s3(url_xsd, named)
-        print 'Created Url Ok!: %s' % created_url
+        print('Created Url Ok!: %s' % created_url)
 
         # Mapping all internal url in the file to s3 cached env.
         for original_url in urls:
@@ -129,7 +130,7 @@ class Tools(object):
             named = cached.name
 
             new_url = self.cache_s3(original_url, named)
-            print 'Created Url Ok!: %s' % new_url
+            print('Created Url Ok!: %s' % new_url)
 
         return created_url
 
@@ -217,7 +218,7 @@ class Tools(object):
                                  extra_args={'ACL': 'public-read'})
         except ClientError as inst:  # pragma: no cover
             # No coverage code unreachable on travis 'intentionally'
-            print inst.message
+            print(inst.message)
             return url
         else:  # pragma: no cover
             # No coverage code unreachable on travis 'intentionally'
