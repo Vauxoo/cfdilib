@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
-
-from urllib2 import URLError
-
+from __future__ import print_function
 from suds.client import Client
+from urllib2 import URLError
 
 
 class Signatory(object):
     """A third party element against which we will sign the invoice.
     In Mexico for example it is called PAC, in Spain is the goverment itself
     In other countries it can be a different entity, private or public and use
-    different kind of webservices technologies.
+    different kind of web services technologies.
 
     This is an object to be used as a helper, this should be overwritten
     if the way we decided to sign (SOAP, xmlrpc, json, etc, etc)
@@ -33,7 +32,7 @@ class Signatory(object):
             self.result = self.client.service.stamp(
                 self.document, self.user, self.password)
         except Exception as e:
-            print e  # pylint: disable=print-statement
+            print(e)  # pylint: disable=print-statement
 
     def sign(self, xml_doc):
         """Sign the document with a third party signatory.
