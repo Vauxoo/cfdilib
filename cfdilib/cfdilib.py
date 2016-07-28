@@ -73,7 +73,7 @@ class BaseDocument:
         self.ups = False
         self.debug_mode = debug_mode
         self.schema_url = None
-        self.document = unicode()
+        self.document = ''
         self.document_path = None
         self.xslt_path = None
         self.xslt_document = None
