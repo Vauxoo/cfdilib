@@ -179,7 +179,7 @@ class BaseDocument:
         cached = NamedTemporaryFile(delete=False)
         document = u''
         try:
-            document = self.template.render(inv=self)
+            document = self.template.render(rep=self)
         except UndefinedError as ups:
             self.ups = ups
 
