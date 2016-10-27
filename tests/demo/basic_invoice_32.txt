@@ -5,8 +5,8 @@
 {
     'emitter_domicile': 'Vauxoo SA de CV',
     'currency': 'MXN',
-    'account': '123456',
     'rate': '17.8',
+    'pay_method': u'Pago en una sola exhibición',
     'certificate': 'CERTIFXSFT',
     'date_invoice_tz': '2016-06-01T06:07:08',
     'number': 'ABC456',

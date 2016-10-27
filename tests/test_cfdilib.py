@@ -62,6 +62,8 @@ class TestCfdilib(unittest.TestCase):
                                      debug_mode=True)
         self.assertTrue(invoice.document,
                         'A valid dictionary gave error debugged_mode enabled')
+        self.assertFalse(bool(invoice.ups),
+                        'A valid dictionary gave error debugged_mode enabled %s' % invoice.document)
 
     def test_003_get_cfd(self):
         """With a given valid dict an invoice object is created"""
@@ -78,7 +80,7 @@ class TestCfdilib(unittest.TestCase):
         # Ok it failed!, then we assert if
         # the message is the one I expected for.
         self.assertTrue(invoice.ups.message.find('Emisor') > 0,
-                        'The expected failed entry Emisor was erroneous.')
+                        'The expected failed entry Emisor was erroneous. %s' % invoice.ups.message)
 
         invoice = cfdv32.get_invoice({})
         self.assertTrue(bool(invoice.ups),
