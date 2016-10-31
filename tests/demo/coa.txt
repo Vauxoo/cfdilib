@@ -1,0 +1,20 @@
+{'vat': 'VAU111017CG9',
+ 'month': '01',
+ 'year': '2016',
+ 'accounts': [
+    {
+    'code': '101',
+    'number': '1111',
+    'name': 'CAJAS',
+    'level': '1',
+    'nature': 'D'
+    },
+    {
+    'code': '101.01',
+    'number': '1111001000',
+    'name': 'CAJA CHICA',
+    'level': '2',
+    'nature': 'D'
+    },
+    ]
+}
