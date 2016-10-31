@@ -1,0 +1,16 @@
+<catalogocuentas:Catalogo
+    xsi:schemaLocation="www.sat.gob.mx/esquemas/ContabilidadE/1_1/CatalogoCuentas http://www.sat.gob.mx/esquemas/ContabilidadE/1_1/CatalogoCuentas/CatalogoCuentas_1_1.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:catalogocuentas="www.sat.gob.mx/esquemas/ContabilidadE/1_1/CatalogoCuentas"
+    Version="1.1"
+    RFC="{{ inv.vat }}"
+    Mes="{{ inv.month }}"
+    Anio="{{ inv.year }}">
+{% for acc in inv.accounts %}
+    <catalogocuentas:Ctas
+        CodAgrup="{{ acc.code }}"
+        NumCta="{{ acc.number }}"
+        Desc="{{ acc.name }}"
+        Nivel="{{ acc.level }}"
+        Natur="{{ acc.nature }}" />
+{% endfor %}
+</catalogocuentas:Catalogo>

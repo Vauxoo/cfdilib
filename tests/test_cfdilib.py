@@ -41,6 +41,8 @@ class TestCfdilib(unittest.TestCase):
             self._get_test_file('basic_invoice_32_false.txt'))
         self.dict_invoice_basic_32_norfc = eval(
             self._get_test_file('basic_noRFC.txt'))
+        self.dict_coa = eval(
+            self._get_test_file('coa.txt'))
         self.real_document_xml = join(
             dirname(cfdilib.__file__), "..", "tests", "demo", 'cfdv32.xml')
         self.test_plain = join(
@@ -62,10 +64,20 @@ class TestCfdilib(unittest.TestCase):
         invoice object is created in debug_mode"""
         invoice = cfdv32.get_invoice(self.dict_invoice_basic_32,
                                      debug_mode=True)
-        self.assertTrue(invoice.document,
-                        'A valid dictionary gave error debugged_mode enabled')
         self.assertFalse(bool(invoice.ups),
                         'A valid dictionary gave error debugged_mode enabled %s' % invoice.document)
+        self.assertTrue(invoice.document,
+                        'A valid dictionary gave error debugged_mode enabled')
+
+    def test_002_get_coa(self):
+        """With a given valid dict an
+        invoice object is created in debug_mode"""
+        coa = cfdv32.get_coa(self.dict_coa,
+                             debug_mode=True)
+        self.assertTrue(coa.document,
+                        'A valid dictionary gave error with the coa')
+        self.assertFalse(bool(coa.ups),
+                        'A valid dictionary gave error coa %s' % coa.document)
 
     def test_003_get_cfd(self):
         """With a given valid dict an invoice object is created"""
