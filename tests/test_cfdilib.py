@@ -39,6 +39,8 @@ class TestCfdilib(unittest.TestCase):
             self._get_test_file('basic_invoice_32_errored.txt'))
         self.dict_invoice_basic_32_false = eval(
             self._get_test_file('basic_invoice_32_false.txt'))
+        self.dict_invoice_basic_32_norfc = eval(
+            self._get_test_file('basic_noRFC.txt'))
         self.real_document_xml = join(
             dirname(cfdilib.__file__), "..", "tests", "demo", 'cfdv32.xml')
         self.test_plain = join(
@@ -99,6 +101,19 @@ class TestCfdilib(unittest.TestCase):
         self.assertTrue(invoice.document,
                         'A invalid dictionary gave error debugged_mode '
                         'enabled gave an error.')
+
+    def test_005_get_norfc(self):
+        """With a given `invalid` dict an invoice
+        object is created in debug_mode"""
+        invoice = cfdv32.get_invoice(
+            self.dict_invoice_basic_32_norfc, debug_mode=True)
+        self.assertTrue(invoice.document,
+                        'A invalid dictionary gave error debugged_mode '
+                        'enabled gave an error.')
+        self.assertTrue(bool(invoice.ups),
+                        'Error expected and not received.')
+        self.assertTrue(invoice.ups.message.find('rfc') >= 0,
+                        'Expected a controlled error mentioning RFC and gotten other thing.')
 
     def test_006_download_file(self):
         """With a file it is downloaded and cached in a temporary file"""

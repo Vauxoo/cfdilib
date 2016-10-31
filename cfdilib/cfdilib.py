@@ -133,7 +133,7 @@ class BaseDocument:
             xslt = element.read()
             self.xslt_document = xslt
             # In case of caching,
-            # the xslt_path will be from cahed and not from local
+            # the xslt_path will be from cached and not from local
             self.xslt_fname = xslt_path
 
     @abstractmethod
