@@ -43,6 +43,8 @@ class TestCfdilib(unittest.TestCase):
             self._get_test_file('basic_noRFC.txt'))
         self.dict_coa = eval(
             self._get_test_file('coa.txt'))
+        self.dict_balance = eval(
+            self._get_test_file('balance.txt'))
         self.real_document_xml = join(
             dirname(cfdilib.__file__), "..", "tests", "demo", 'cfdv32.xml')
         self.test_plain = join(
@@ -77,7 +79,17 @@ class TestCfdilib(unittest.TestCase):
         self.assertTrue(coa.document,
                         'A valid dictionary gave error with the coa')
         self.assertFalse(bool(coa.ups),
-                        'A valid dictionary gave error coa %s' % coa.document)
+                         'A valid dictionary gave error coa %s' % coa.document))
+
+    def test_002_get_balance(self):
+        """With a given valid dict an
+        invoice object is created in debug_mode"""
+        balance = cfdv32.get_balance(self.dict_balance,
+                                     debug_mode=True)
+        self.assertFalse(bool(balance.ups),
+                        'A valid dictionary gave error coa %s' % balance.document)
+        self.assertTrue(balance.document,
+                        'A valid dictionary gave error with the coa')
 
     def test_003_get_cfd(self):
         """With a given valid dict an invoice object is created"""

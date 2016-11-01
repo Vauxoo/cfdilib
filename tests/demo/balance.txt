@@ -1,0 +1,22 @@
+{
+'vat': 'VAU111017CG9',
+'month': '01',
+'year': '2016',
+'type': 'N',
+'accounts': [
+        {
+            'number': '1111',
+            'debit': '123.22',
+            'credit': '0.0',
+            'initial': '123.22',
+            'end': '0.0',
+        },
+        {
+            'number': '1111001000',
+            'credit': '123.22',
+            'debit': '0.0',
+            'initial': '0.0',
+            'end': '-123.22'
+        }
+    ]
+}
