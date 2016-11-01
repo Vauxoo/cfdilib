@@ -1,0 +1,19 @@
+<BCE:Balanza
+    xmlns:BCE="www.sat.gob.mx/esquemas/ContabilidadE/1_1/BalanzaComprobacion"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="www.sat.gob.mx/esquemas/ContabilidadE/1_1/BalanzaComprobacion http://www.sat.gob.mx/esquemas/ContabilidadE/1_1/BalanzaComprobacion/BalanzaComprobacion_1_1.xsd"
+    Anio="{{ inv.year }}"
+    Mes="{{ inv.month }}"
+    RFC="{{ inv.vat }}"
+    TipoEnvio="{{ inv.type }}"
+    Version="1.1">
+
+{% for acc in inv.accounts %}
+    <BCE:Ctas
+        Debe="{{ acc.debit }}"
+        Haber="{{ acc.credit }}"
+        NumCta="{{ acc.number }}"
+        SaldoFin="{{ acc.initial }}"
+        SaldoIni="{{ acc.end }}"/>
+{% endfor %}
+</BCE:Balanza>
