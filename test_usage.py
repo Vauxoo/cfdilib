@@ -16,7 +16,7 @@ print(os.environ.get('TRAVIS'))
 print(type(os.environ.get('TRAVIS')))
 print('*'*50)
 
-cfdiv32 = 'http://www.sat.gob.mx/sitio_internet/cfd/3/cadenaoriginal_3_2/cadenaoriginal_3_2.xslt'  # noqa
+cfdiv32 = 'http://www.sat.gob.mx/esquemas/ContabilidadE/1_1/PolizasPeriodo/PolizasPeriodo_1_1.xslt'  # noqa
 
 if not os.environ.get('TRAVIS') == 'true':
     '''Here basically you need to have a profile called "dev" to use boto3

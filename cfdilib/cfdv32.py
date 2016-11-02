@@ -96,3 +96,33 @@ class CFDIBalance(BaseDocument):
 
 def get_balance(dict_balance, debug_mode=False):
     return CFDIBalance(dict_balance, debug_mode=debug_mode)
+
+class CFDIMoves(BaseDocument):
+    """Balance XML document
+    cfdi: v1.1 for Accounting."""
+
+    def __init__(self, dict_accounts, debug_mode=False):
+        self.template_fname = 'cfdi11moves.xml'
+        # We explicitly cached into s3 with the local test then ensure use
+        # the s3 url to use our cache. remove the tools.s3_url if you want to
+        # load first in the future
+        self.xslt_fname = \
+            tools.s3_url('http://www.sat.gob.mx/esquemas/ContabilidadE/1_1/PolizasPeriodo/PolizasPeriodo_1_1.xslt')
+        self.global_namespace = 'http://www.sat.gob.mx/esquemas/ContabilidadE/1_1/PolizasPeriodo'
+        self.set_template(self.template_fname)
+        super(CFDIMoves, self).__init__(dict_accounts, debug_mode=debug_mode)
+
+    def set_template(self, template_fname):
+        self.template = super(CFDIMoves, self).set_template(template_fname)
+
+    def set_schema(self, schema_fname):
+        self.schema = super(CFDIMoves, self).set_schema(schema_fname)
+
+    def set_xslt(self):
+        # TODO: Standarize the schema in this way also,
+        #       we can not use different algorithms here
+        self.xstl = super(CFDIMoves, self).set_xslt()
+
+
+def get_moves(dict_moves, debug_mode=False):
+    return CFDIMoves(dict_moves, debug_mode=debug_mode)

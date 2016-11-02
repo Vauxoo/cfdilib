@@ -27,6 +27,10 @@ class Struct(object):
                 self.__dict__[k] = u'NA'
             if isinstance(v, dict):
                 self.__dict__[k] = Struct(v)
+            if isinstance(v, list):
+                # import pdb; pdb.set_trace()
+                self.__dict__[k] = [Struct(x) for x in v]
+
 
 
 class BaseDocument:
@@ -85,6 +89,10 @@ class BaseDocument:
                 self.__dict__[k] = u'NA'
             if isinstance(v, dict):
                 self.__dict__[k] = Struct(v)
+            if isinstance(v, list):
+                # import pdb; pdb.set_trace()
+                self.__dict__[k] = [Struct(x) for x in v]
+
         self.set_xml()
         self.set_xslt_fname()
         self.document_orginal = self.set_original()
