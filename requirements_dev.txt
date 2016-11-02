@@ -9,13 +9,9 @@ cryptography==1.0.1
 PyYAML==3.11
 click
 suds
-# m2crypto
-# qrcode
-# xmltodict
-# pyopenssl
 jinja2
-lxml
 
 # To use tools related to sync some things with s3.
+# You will need lxml from the system environment in ubuntu
 
 boto3

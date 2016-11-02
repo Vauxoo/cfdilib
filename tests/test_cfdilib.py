@@ -45,6 +45,8 @@ class TestCfdilib(unittest.TestCase):
             self._get_test_file('coa.txt'))
         self.dict_balance = eval(
             self._get_test_file('balance.txt'))
+        self.dict_moves = eval(
+            self._get_test_file('moves.txt'))
         self.real_document_xml = join(
             dirname(cfdilib.__file__), "..", "tests", "demo", 'cfdv32.xml')
         self.test_plain = join(
@@ -67,7 +69,7 @@ class TestCfdilib(unittest.TestCase):
         invoice = cfdv32.get_invoice(self.dict_invoice_basic_32,
                                      debug_mode=True)
         self.assertFalse(bool(invoice.ups),
-                        'A valid dictionary gave error debugged_mode enabled %s' % invoice.document)
+                         'A valid dictionary gave error debugged_mode enabled %s' % invoice.document)
         self.assertTrue(invoice.document,
                         'A valid dictionary gave error debugged_mode enabled')
 
@@ -87,8 +89,18 @@ class TestCfdilib(unittest.TestCase):
         balance = cfdv32.get_balance(self.dict_balance,
                                      debug_mode=True)
         self.assertFalse(bool(balance.ups),
-                        'A valid dictionary gave error coa %s' % balance.document)
+                         'A valid dictionary gave error coa %s' % balance.document)
         self.assertTrue(balance.document,
+                        'A valid dictionary gave error with the coa')
+
+    def test_002_get_moves(self):
+        """With a given valid dict an
+        invoice object is created in debug_mode"""
+        moves = cfdv32.get_moves(self.dict_moves,
+                                 debug_mode=True)
+        self.assertFalse(bool(moves.ups),
+                         'A valid dictionary gave error coa %s' % moves.document)
+        self.assertTrue(moves.document,
                         'A valid dictionary gave error with the coa')
 
     def test_003_get_cfd(self):
