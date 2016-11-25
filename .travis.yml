@@ -31,6 +31,8 @@ install:
   - pip install -U tox jinja2 codecov boto3
   # To fix insecureplatformwarning of urllib3 for coveralls command
   - pip install -U pyopenssl ndg-httpsclient pyasn1
+  # To test last version
+  - pip install -U lxml
 
 # command to run tests, e.g. python setup.py test
 script:
