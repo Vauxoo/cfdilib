@@ -161,12 +161,12 @@ class BaseDocument:
         :rtype: bool
         """
         # TODO: be able to get doc for error given an xsd.
-        schema_root = etree.XML(schema_str)
+        schema_root = etree.parse(StringIO(schema_str))
         schema = etree.XMLSchema(schema_root)
-        xmlparser = etree.XMLParser(schema=schema)
         try:
-            etree.fromstring(xml_valid, xmlparser)
-        except etree.XMLSyntaxError as ups:
+            tree = etree.parse(StringIO(xml_valid.encode('UTF-8')))
+            schema.assertValid(tree)
+        except etree.DocumentInvalid as ups:
             self.ups = ups
         finally:
             if self.ups:
