@@ -184,7 +184,7 @@ class BaseDocument:
         is valid or not with the given schema.
         :returns boolean: Either was valid or not the generated document.
         """
-        cached = NamedTemporaryFile(delete=False)
+        cached = StringIO()
         document = u''
         try:
             document = self.template.render(inv=self)
@@ -202,9 +202,9 @@ class BaseDocument:
                                            encoding='utf-8')
             # TODO: When Document Generated, this this should not fail either.
             # Caching just when valid then.
-            with cached as cache:
-                cache.write(self.document is not None and self.document or u'')
-            self.document_path = cached.name
+            cached.write(self.document is not None and self.document or u'')
+            cached.seek(0)
+            self.document_path = cached
 
     def get_element_from_clark(self, element):
         """**Helper method:** Given a Clark's Notation
