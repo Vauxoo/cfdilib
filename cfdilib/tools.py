@@ -69,24 +69,6 @@ def retry(exception_to_check, tries=4, delay=3, back_off=2, logger=None):  # pra
     return deco_retry
 
 
-@lru_cache(maxsize=128)
-@retry(urllib2.URLError, tries=3, delay=3, back_off=2)
-def _cache_it(url):
-    with closing(urllib2.urlopen(url)) as f_url:
-        content = f_url.read()
-        pattern = r'href=[\'"]?([^\'" >]+)'
-        # TODO: unwire this to xslt, but usefull for now
-        # Mapping all external url in the file to local cached files.
-        sub_urls = filter(lambda u: not isfile(u), re.findall(pattern, content)
-                          ) if url.endswith('xslt') else []
-        for sub_url in sub_urls:
-            content = content.replace(sub_url, _cache_it(sub_url).name)
-        cached = NamedTemporaryFile()
-        cached.write(content)
-        cached.seek(0)
-        return cached
-
-
 class Tools(object):
     """Set of tools to manipulate things that generally will be common between
     several ways to manage signed files and/or external connections.
@@ -253,6 +235,24 @@ class Tools(object):
     def is_url(element_name):
         return element_name.startswith('http')
 
+    @staticmethod
+    @lru_cache(maxsize=128)
+    @retry(urllib2.URLError, tries=3, delay=3, back_off=2)
+    def _cache_it(url):
+        with closing(urllib2.urlopen(url)) as f_url:
+            content = f_url.read()
+            rep = r'href=[\'"]?([^\'" >]+)'
+            # TODO: unwire this to xslt, but usefull for now
+            # Mapping all external url in the file to local cached files.
+            sub_urls = filter(lambda u: not isfile(u), re.findall(rep, content)
+                              ) if url.endswith('xslt') else []
+            for s_url in sub_urls:
+                content = content.replace(s_url, Tools._cache_it(s_url).name)
+            cached = NamedTemporaryFile()
+            cached.write(content)
+            cached.seek(0)
+            return cached
+
     def cache_it(self, url):
         """Take an url which deliver a plain document  and convert it to a
         temporary file, this document is an xslt file expecting contains all
@@ -266,11 +266,11 @@ class Tools(object):
         """
         # TODO: Use directly the file object instead of the name of the file
         #       with seek(0)
-        cached = _cache_it(url)
+        cached = self._cache_it(url)
         if not isfile(cached.name):
             # If /tmp files are deleted
-            _cache_it.cache_clear()
-            cached = _cache_it(url)
+            self._cache_it.cache_clear()
+            cached = self._cache_it(url)
         return cached.name
 
     @staticmethod

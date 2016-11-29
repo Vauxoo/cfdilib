@@ -14,7 +14,7 @@ from os import environ, unlink
 import unittest
 
 from cfdilib import cfdilib, cfdv32
-from cfdilib.tools import _cache_it, tools
+from cfdilib.tools import tools
 
 
 class TestCfdilib(unittest.TestCase):
@@ -164,9 +164,9 @@ class TestCfdilib(unittest.TestCase):
         """With a file it is downloaded and cached in a temporary file"""
         # TODO: Mock this
         downloaded = tools.cache_it(self.cadena_travis)
-        hits = _cache_it.cache_info().hits
+        hits = tools._cache_it.cache_info().hits
         new_downloaded = tools.cache_it(self.cadena_travis)
-        new_hits = _cache_it.cache_info().hits
+        new_hits = tools._cache_it.cache_info().hits
         self.assertEqual(new_hits - hits, 1,
                          'Cache was not cached properly')
         self.assertEqual(downloaded, new_downloaded, 'Cache different values')
@@ -178,12 +178,11 @@ class TestCfdilib(unittest.TestCase):
         downloaded = tools.cache_it(self.cadena_travis)
         unlink(downloaded)
         tools.cache_it(self.cadena_travis)
-        hits = _cache_it.cache_info().hits
+        hits = tools._cache_it.cache_info().hits
         self.assertFalse(hits, 'Cache was not cleared')
         tools.cache_it(self.cadena_travis)
-        hits = _cache_it.cache_info().hits
+        hits = tools._cache_it.cache_info().hits
         self.assertTrue(hits == 1, 'Cache hits not increased 1 after cleared')
-
 
     def test_008_s3(self):
         """Cache on amazon is working properly"""
