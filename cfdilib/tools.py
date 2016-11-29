@@ -6,6 +6,8 @@ import re
 import time
 import urllib2
 
+from contextlib import closing
+
 from boto3.s3.transfer import S3Transfer
 from botocore.client import ClientError
 from tempfile import NamedTemporaryFile
@@ -13,6 +15,11 @@ from lxml import etree
 from os.path import isfile
 from functools import wraps
 from urlparse import urlparse
+
+try:
+    from functools import lru_cache
+except ImportError:
+    from backports.functools_lru_cache import lru_cache
 
 _logger = logging.getLogger(__name__)
 
@@ -60,6 +67,27 @@ def retry(exception_to_check, tries=4, delay=3, back_off=2, logger=None):  # pra
         return f_retry  # true decorator
 
     return deco_retry
+
+
+@lru_cache(maxsize=128)
+@retry(urllib2.URLError, tries=3, delay=3, back_off=2)
+def _cache_it(url):
+    with closing(urllib2.urlopen(url)) as f_url:
+        cached = NamedTemporaryFile()
+        content = f_url.read()
+        # TODO: unwire this to xslt, but usefull for now
+        if url.endswith('xslt'):
+            # Find all urls in the main xslt file.
+            urls = re.findall(r'href=[\'"]?([^\'" >]+)', content)
+
+            # Mapping all internal url in the file to local cached files.
+            for original_url in urls:
+                if not isfile(original_url):
+                    original_cached = _cache_it(original_url)
+                    content.replace(original_url, original_cached.name)
+        cached.write(content)
+        cached.seek(0)
+        return cached
 
 
 class Tools(object):
@@ -228,7 +256,6 @@ class Tools(object):
     def is_url(element_name):
         return element_name.startswith('http')
 
-    @retry(urllib2.URLError, tries=3, delay=3, back_off=2)
     def cache_it(self, url):
         """Take an url which deliver a plain document  and convert it to a
         temporary file, this document is an xslt file expecting contains all
@@ -240,42 +267,13 @@ class Tools(object):
         :return file_path: local new absolute path
         :rtype file_path: str
         """
-        def cache_it(_url):
-            cached = NamedTemporaryFile(delete=False)
-            named = cached.name
-            _response = urllib2.urlopen(_url)
-            _content = _response.read()
-            with cached as cache:
-                cache.write(_content)
-            self.cached.update({_url: named})
-            return _content, named
-
-        # If on this runtime it is cached do not cache it again.
-        if self.cached.get(url) and isfile(self.cached[url]):
-            return self.cached[url]
-
-        internal = 0
-
-        # TODO: unwire this to xslt, but usefull for now
-        if url.endswith('xslt') and not internal:
-
-            # check
-
-            # Opening the first file just the first time.
-            response = urllib2.urlopen(url)
-            content = response.read()
-
-            # Find all urls in the main xslt file.
-
-            urls = re.findall(r'href=[\'"]?([^\'" >]+)', content)
-
-            # Mapping all internal url in the file to local cached files.
-
-            for original_url in urls:
-                internal += 1
-                content, _file = cache_it(original_url)
-                content.replace(original_url, _file)
-        return cache_it(url)[1]
+        # TODO: Use directly the file object instead of the name of the file
+        cached = _cache_it(url)
+        if not isfile(cached.name):
+            # If /tmp files are deleted
+            _cache_it.cache_clear()
+            cached = _cache_it(url)
+        return cached.name
 
     @staticmethod
     def get_original(document, xslt):

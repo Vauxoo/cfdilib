@@ -9,12 +9,12 @@ Tests for `cfdilib` module.
 Tests for `cfdv32` module.
 """
 
-from os.path import join, dirname
-from os import environ
+from os.path import join, dirname, isfile
+from os import environ, unlink
 import unittest
 
 from cfdilib import cfdilib, cfdv32
-from cfdilib.tools import tools
+from cfdilib.tools import _cache_it, tools
 
 
 class TestCfdilib(unittest.TestCase):
@@ -164,15 +164,26 @@ class TestCfdilib(unittest.TestCase):
         """With a file it is downloaded and cached in a temporary file"""
         # TODO: Mock this
         downloaded = tools.cache_it(self.cadena_travis)
-        content_xslt = downloaded
-        content_xml = self.real_document_xml
-        converted = tools.get_original(content_xml, content_xslt)
-        self.assertTrue(
-            converted,
-            'I read the content of a cached file and the result '
-            'was not correct.')
-        self.assertTrue(len(tools.cached) > 1,
-                        'Cache dictionary was not cached properly')
+        hits = _cache_it.cache_info().hits
+        new_downloaded = tools.cache_it(self.cadena_travis)
+        new_hits = _cache_it.cache_info().hits
+        self.assertEqual(new_hits - hits, 1,
+                         'Cache was not cached properly')
+        self.assertEqual(downloaded, new_downloaded, 'Cache different values')
+        self.assertTrue(isfile(downloaded), 'Cache was not generate file')
+
+    def test_007_clear_cache(self):
+        """With a cached tempfile deleted"""
+        # TODO: Mock this
+        downloaded = tools.cache_it(self.cadena_travis)
+        unlink(downloaded)
+        tools.cache_it(self.cadena_travis)
+        hits = _cache_it.cache_info().hits
+        self.assertFalse(hits, 'Cache was not cleared')
+        tools.cache_it(self.cadena_travis)
+        hits = _cache_it.cache_info().hits
+        self.assertTrue(hits, 'Cache hits not increased after cleared')
+
 
     def test_008_s3(self):
         """Cache on amazon is working properly"""
