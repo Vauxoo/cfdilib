@@ -73,18 +73,15 @@ def retry(exception_to_check, tries=4, delay=3, back_off=2, logger=None):  # pra
 @retry(urllib2.URLError, tries=3, delay=3, back_off=2)
 def _cache_it(url):
     with closing(urllib2.urlopen(url)) as f_url:
-        cached = NamedTemporaryFile()
         content = f_url.read()
+        pattern = r'href=[\'"]?([^\'" >]+)'
         # TODO: unwire this to xslt, but usefull for now
-        if url.endswith('xslt'):
-            # Find all urls in the main xslt file.
-            urls = re.findall(r'href=[\'"]?([^\'" >]+)', content)
-
-            # Mapping all internal url in the file to local cached files.
-            for original_url in urls:
-                if not isfile(original_url):
-                    original_cached = _cache_it(original_url)
-                    content.replace(original_url, original_cached.name)
+        # Mapping all external url in the file to local cached files.
+        sub_urls = filter(lambda u: not isfile(u), re.findall(pattern, content)
+                          ) if url.endswith('xslt') else []
+        for sub_url in sub_urls:
+            content = content.replace(sub_url, _cache_it(sub_url).name)
+        cached = NamedTemporaryFile()
         cached.write(content)
         cached.seek(0)
         return cached
@@ -268,6 +265,7 @@ class Tools(object):
         :rtype file_path: str
         """
         # TODO: Use directly the file object instead of the name of the file
+        #       with seek(0)
         cached = _cache_it(url)
         if not isfile(cached.name):
             # If /tmp files are deleted

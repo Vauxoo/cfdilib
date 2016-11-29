@@ -182,7 +182,7 @@ class TestCfdilib(unittest.TestCase):
         self.assertFalse(hits, 'Cache was not cleared')
         tools.cache_it(self.cadena_travis)
         hits = _cache_it.cache_info().hits
-        self.assertTrue(hits, 'Cache hits not increased after cleared')
+        self.assertTrue(hits == 1, 'Cache hits not increased 1 after cleared')
 
 
     def test_008_s3(self):
