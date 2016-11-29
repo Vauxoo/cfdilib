@@ -20,6 +20,7 @@ requirements = [
     "jinja2",
     # "lxml",  # Even if we need this in ubuntu you need use the system site
     #  package.
+    "backports.functools_lru_cache",
 ]
 
 test_requirements = [
