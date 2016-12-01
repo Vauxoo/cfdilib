@@ -13,7 +13,7 @@
         Debe="{{ acc.debit }}"
         Haber="{{ acc.credit }}"
         NumCta="{{ acc.number }}"
-        SaldoFin="{{ acc.initial }}"
-        SaldoIni="{{ acc.end }}"/>
+        SaldoFin="{{ acc.end }}"
+        SaldoIni="{{ acc.initial }}"/>
 {% endfor %}
 </BCE:Balanza>
