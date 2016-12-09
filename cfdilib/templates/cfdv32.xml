@@ -5,9 +5,7 @@
     version="3.2"
     LugarExpedicion="{{ inv.emitter_domicile }}"
     Moneda="{{ inv.currency }}"
-    {% if inv.account %}
-        NumCtaPago="{{ inv.account }}"
-    {% endif %}
+    NumCtaPago="{{ inv.account }}"
     TipoCambio="{{ inv.rate }}"
     certificado="{{ inv.certificate }}"
     descuento="{{ inv.discount_amount or 0.0 }}"
@@ -48,18 +46,18 @@
             Regimen="{{ inv.emitter_fiscal_position or '' }}"/>
     </cfdi:Emisor>
     <cfdi:Receptor
-        {% if inv.receiver_name %} nombre="{{ inv.receiver_name }}" {% endif %}
+        nombre="{{ inv.receiver_name }}"
         rfc="{{ inv.receiver_rfc }}">
         <cfdi:Domicilio
-            {% if inv.receiver_street %} calle="{{ inv.receiver_street }}" {% endif %}
-            {% if inv.receiver_zip %} codigoPostal="{{ inv.receiver_zip }}" {% endif %}
-            {% if inv.receiver_colony %} colonia="{{ inv.receiver_colony }}" {% endif %}
-            {% if inv.receiver_state %} estado="{{ inv.receiver_state}}" {% endif %}
-            {% if inv.receiver_locality %} localidad="{{ inv.receiver_locality }}" {% endif %}
-            {% if inv.receiver_municipality %} municipio="{{ inv.receiver_municipality }}" {% endif %}
-            {% if inv.receiver_exterior_no %} noExterior="{{ inv.receiver_exterior_no }}" {% endif %}
-            {% if inv.receiver_interior_no %} noInterior="{{ inv.receiver_interior_no }}" {% endif %}
-            {% if inv.receiver_country %} pais="{{ inv.receiver_country }}" {% endif %}
+            calle="{{ inv.receiver_street }}"
+            codigoPostal="{{ inv.receiver_zip }}"
+            colonia="{{ inv.receiver_colony }}"
+            estado="{{ inv.receiver_state}}"
+            localidad="{{ inv.receiver_locality }}"
+            municipio="{{ inv.receiver_municipality }}"
+            noExterior="{{ inv.receiver_exterior_no }}"
+            noInterior="{{ inv.receiver_interior_no }}"
+            pais="{{ inv.receiver_country }}"
             />
     </cfdi:Receptor>
     {% if inv.invoice_lines %}

@@ -3,7 +3,7 @@ import os
 from os.path import dirname
 from cStringIO import StringIO
 from abc import ABCMeta, abstractmethod
-from tempfile import NamedTemporaryFile
+from lxml import objectify, etree
 
 from lxml import etree
 from jinja2 import Environment, FileSystemLoader
@@ -175,6 +175,26 @@ class BaseDocument:
                 self.valid = True
             return self.valid
 
+    @staticmethod
+    def clean_empty_attr(document):
+        """To avoid several conditionals in templates this method allows you
+        automate how the cleanup post rendering is done by default it just
+        clean all empty attributes assuming they are optionals
+
+        :param document:
+        :return: cleaned document
+        """
+        root = objectify.fromstring(document.encode("UTF-8"))
+        for r in root.keys():
+            if not root.get(r):
+                # delattr(root, r)
+                print "To delete this. %s" % r
+        for element in root.iterchildren():
+            for key in element.keys():
+                if not element.get(key):
+                    print "To delete this. %s" % key
+        return document
+
     def set_xml(self):
         """Set document xml just rendered already
         validated against xsd to be signed.
@@ -187,7 +207,7 @@ class BaseDocument:
         cached = StringIO()
         document = u''
         try:
-            document = self.template.render(inv=self)
+            document = self.clean_empty_attr(self.template.render(inv=self))
         except UndefinedError as ups:
             self.ups = ups
 
