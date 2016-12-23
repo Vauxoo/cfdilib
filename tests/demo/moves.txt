@@ -7,7 +7,7 @@
         'name': 'name of the move0',
         'date': '2016-05-01',
         'id': '1245-999-podr',
-        'lines': [
+        'line_ids': [
             {'name': 'something interesting',
              'account_id': {'name': 'Some account name'},
              'account_id': {'code': '1111000001'},
@@ -38,7 +38,7 @@
         'name': 'name of the move',
         'date': '2016-05-31',
         'id': '1245-999-podr',
-        'lines': [
+        'line_ids': [
             {'name': 'something interesting',
              'account_id': {'name': 'Some account name'},
              'account_id': {'code': '1111000001'},
