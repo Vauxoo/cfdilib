@@ -22,13 +22,13 @@
              },
             {'name': 'something interesting',
              'account_id': {'name': 'Some account name'},
-             'account_id': {'code': '1111000003'},
+             'account_id': {'code': '1111003'},
              'debit': '0.0',
              'credit': '123.22'
              },
             {'name': 'something interesting',
              'account_id': {'name': 'Some account name'},
-             'account_id': {'code': '1111000004'},
+             'account_id': {'code': '1111004'},
              'debit': '123.22',
              'credit': '0.0'
              }
