@@ -9,26 +9,22 @@
         'id': '1245-999-podr',
         'line_ids': [
             {'name': 'something interesting',
-             'account_id': {'name': 'Some account name'},
-             'account_id': {'code': '1111000001'},
+             'account_id': {'name': 'Some account name', 'code': '1111000001'},
              'debit': '123.22',
              'credit': '0.0'
              },
             {'name': 'something interesting',
-             'account_id': {'name': 'Some account name'},
-             'account_id': {'code': '1111000002'},
+             'account_id': {'name': 'Some account name', 'code': '1111000002'},
              'debit': '0.0',
              'credit': '123.22'
              },
             {'name': 'something interesting',
-             'account_id': {'name': 'Some account name'},
-             'account_id': {'code': '1111003'},
+             'account_id': {'name': 'Some account name', 'code': '1111003'},
              'debit': '0.0',
              'credit': '123.22'
              },
             {'name': 'something interesting',
-             'account_id': {'name': 'Some account name'},
-             'account_id': {'code': '1111004'},
+             'account_id': {'name': 'Some account name', 'code': '1111004'},
              'debit': '123.22',
              'credit': '0.0'
              }
@@ -40,26 +36,22 @@
         'id': '1245-999-podr',
         'line_ids': [
             {'name': 'something interesting',
-             'account_id': {'name': 'Some account name'},
-             'account_id': {'code': '1111000001'},
+             'account_id': {'name': 'Some account name', 'code': '1111000001'},
              'debit': '123.22',
              'credit': '0.0'
              },
             {'name': 'something interesting',
-             'account_id': {'name': 'Some account name'},
-             'account_id': {'code': '1111000002'},
+             'account_id': {'name': 'Some account name', 'code': '1111000002'},
              'debit': '0.0',
              'credit': '123.22'
              },
             {'name': 'something interesting',
-             'account_id': {'name': 'Some account name'},
-             'account_id': {'code': '1111003'},
+             'account_id': {'name': 'Some account name', 'code': '1111003'},
              'debit': '0.0',
              'credit': '123.22'
              },
             {'name': 'something interesting',
-             'account_id': {'name': 'Some account name'},
-             'account_id': {'code': '1111004'},
+             'account_id': {'name': 'Some account name', 'code': '1111004'},
              'debit': '123.22',
              'credit': '0.0'
              }
