@@ -6,29 +6,25 @@
         {
         'name': 'name of the move0',
         'date': '2016-05-01',
-        'number': '1245-999-podr',
-        'lines': [
-            {'concept': 'something interesting',
-             'account_name': 'Some account name',
-             'account_code': '1111000001',
+        'id': '1245-999-podr',
+        'line_ids': [
+            {'name': 'something interesting',
+             'account_id': {'name': 'Some account name', 'code': '1111000001'},
              'debit': '123.22',
              'credit': '0.0'
              },
-            {'concept': 'something interesting',
-             'account_name': 'Some account name',
-             'account_code': '1111000002',
+            {'name': 'something interesting',
+             'account_id': {'name': 'Some account name', 'code': '1111000002'},
              'debit': '0.0',
              'credit': '123.22'
              },
-            {'concept': 'something interesting',
-             'account_name': 'Some account name',
-             'account_code': '1111003',
+            {'name': 'something interesting',
+             'account_id': {'name': 'Some account name', 'code': '1111003'},
              'debit': '0.0',
              'credit': '123.22'
              },
-            {'concept': 'something interesting',
-             'account_name': 'Some account name',
-             'account_code': '1111004',
+            {'name': 'something interesting',
+             'account_id': {'name': 'Some account name', 'code': '1111004'},
              'debit': '123.22',
              'credit': '0.0'
              }
@@ -37,29 +33,25 @@
         {
         'name': 'name of the move',
         'date': '2016-05-31',
-        'number': '1245-999-podr',
-        'lines': [
-            {'concept': 'something interesting',
-             'account_name': 'Some account name',
-             'account_code': '1111000001',
+        'id': '1245-999-podr',
+        'line_ids': [
+            {'name': 'something interesting',
+             'account_id': {'name': 'Some account name', 'code': '1111000001'},
              'debit': '123.22',
              'credit': '0.0'
              },
-            {'concept': 'something interesting',
-             'account_name': 'Some account name',
-             'account_code': '1111000002',
+            {'name': 'something interesting',
+             'account_id': {'name': 'Some account name', 'code': '1111000002'},
              'debit': '0.0',
              'credit': '123.22'
              },
-            {'concept': 'something interesting',
-             'account_name': 'Some account name',
-             'account_code': '1111003',
+            {'name': 'something interesting',
+             'account_id': {'name': 'Some account name', 'code': '1111003'},
              'debit': '0.0',
              'credit': '123.22'
              },
-            {'concept': 'something interesting',
-             'account_name': 'Some account name',
-             'account_code': '1111004',
+            {'name': 'something interesting',
+             'account_id': {'name': 'Some account name', 'code': '1111004'},
              'debit': '123.22',
              'credit': '0.0'
              }

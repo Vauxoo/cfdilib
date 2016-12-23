@@ -9,10 +9,10 @@
     Version="1.1">
 
 {% for move in inv.moves %}
-    <PLZ:Poliza Concepto="{{ move.name }}" Fecha="{{ move.date }}" NumUnIdenPol="{{ move.number }}">
-    {% for line in move.lines %}
-        <PLZ:Transaccion Concepto="{{ line.concept }}" DesCta="{{ line.account_name }}"
-                         NumCta="{{ line.account_code }}" Debe="{{ line.debit }}" Haber="{{ line.credit }}">
+    <PLZ:Poliza Concepto="{{ move.name }}" Fecha="{{ move.date }}" NumUnIdenPol="{{ move.id }}">
+    {% for line in move.line_ids %}
+        <PLZ:Transaccion Concepto="{{ line.name }}" DesCta="{{ line.account_id.name }}"
+                         NumCta="{{ line.account_id.code }}" Debe="{{ line.debit }}" Haber="{{ line.credit }}">
         </PLZ:Transaccion>
     {% endfor %}
     </PLZ:Poliza>
