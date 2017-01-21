@@ -98,4 +98,5 @@
             </cfdi:Traslados>
             {% endif %}
     </cfdi:Impuestos>
+    <cfdi:Addenda/>
 </cfdi:Comprobante>
