@@ -3,7 +3,7 @@
     xmlns:cfdi="http://www.sat.gob.mx/cfd/3"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     version="3.2"
-    LugarExpedicion="{{ inv.emitter_domicile }}"
+    LugarExpedicion="{{ inv.emitter_zip }}"
     Moneda="{{ inv.currency }}"
     {% if inv.account %}
         NumCtaPago="{{ inv.account }}"
@@ -24,43 +24,49 @@
     <cfdi:Emisor
         nombre="{{ inv.emitter_name }}"
         rfc="{{ inv.emitter_rfc }}">
-        <cfdi:DomicilioFiscal
-            calle="{{ inv.emitter_street }}"
-            codigoPostal="{{ inv.emitter_zip }}"
-            colonia="{{ inv.emitter_colony }}"
-            estado="{{ inv.emitter_state}}"
-            localidad="{{ inv.emitter_locality }}"
-            municipio="{{ inv.emitter_municipality }}"
-            noExterior="{{ inv.emitter_exterior_no }}"
-            noInterior="{{ inv.emitter_interior_no }}"
-            pais="{{inv.emitter_country }}"/>
-        <cfdi:ExpedidoEn
-            calle="{{ inv.emitter_issue_on_street }}"
-            codigoPostal="{{ inv.emitter_issue_on_zip }}"
-            colonia="{{ inv.emitter_issue_on_colony }}"
-            estado="{{ inv.emitter_issue_on_state}}"
-            localidad="{{ inv.emitter_issue_on_locality }}"
-            municipio="{{ inv.emitter_issue_on_municipality }}"
-            noExterior="{{ inv.emitter_issue_on_exterior_no }}"
-            noInterior="{{ inv.emitter_issue_on_interior_no }}"
-            pais="{{ inv.emitter_issue_on_country }}"/>
+        {% if not inv.not_show_address or inv.not_show_address == False %}
+            <cfdi:DomicilioFiscal
+                calle="{{ inv.emitter_street }}"
+                codigoPostal="{{ inv.emitter_zip }}"
+                colonia="{{ inv.emitter_colony }}"
+                estado="{{ inv.emitter_state}}"
+                localidad="{{ inv.emitter_locality }}"
+                municipio="{{ inv.emitter_municipality }}"
+                noExterior="{{ inv.emitter_exterior_no }}"
+                noInterior="{{ inv.emitter_interior_no }}"
+                pais="{{inv.emitter_country }}"/>
+        {% endif %}
+        {% if inv.emitter_issued %}
+            <cfdi:ExpedidoEn
+                calle="{{ inv.emitter_issue_on_street }}"
+                codigoPostal="{{ inv.emitter_issue_on_zip }}"
+                colonia="{{ inv.emitter_issue_on_colony }}"
+                estado="{{ inv.emitter_issue_on_state}}"
+                localidad="{{ inv.emitter_issue_on_locality }}"
+                municipio="{{ inv.emitter_issue_on_municipality }}"
+                noExterior="{{ inv.emitter_issue_on_exterior_no }}"
+                noInterior="{{ inv.emitter_issue_on_interior_no }}"
+                pais="{{ inv.emitter_issue_on_country }}"/>
+        {% endif %}
         <cfdi:RegimenFiscal
             Regimen="{{ inv.emitter_fiscal_position or '' }}"/>
     </cfdi:Emisor>
     <cfdi:Receptor
         {% if inv.receiver_name %} nombre="{{ inv.receiver_name }}" {% endif %}
         rfc="{{ inv.receiver_rfc }}">
-        <cfdi:Domicilio
-            {% if inv.receiver_street %} calle="{{ inv.receiver_street }}" {% endif %}
-            {% if inv.receiver_zip %} codigoPostal="{{ inv.receiver_zip }}" {% endif %}
-            {% if inv.receiver_colony %} colonia="{{ inv.receiver_colony }}" {% endif %}
-            {% if inv.receiver_state %} estado="{{ inv.receiver_state}}" {% endif %}
-            {% if inv.receiver_locality %} localidad="{{ inv.receiver_locality }}" {% endif %}
-            {% if inv.receiver_municipality %} municipio="{{ inv.receiver_municipality }}" {% endif %}
-            {% if inv.receiver_exterior_no %} noExterior="{{ inv.receiver_exterior_no }}" {% endif %}
-            {% if inv.receiver_interior_no %} noInterior="{{ inv.receiver_interior_no }}" {% endif %}
-            {% if inv.receiver_country %} pais="{{ inv.receiver_country }}" {% endif %}
-            />
+        {% if not inv.not_show_address or inv.not_show_address == False %}
+            <cfdi:Domicilio
+                {% if inv.receiver_street %} calle="{{ inv.receiver_street }}" {% endif %}
+                {% if inv.receiver_zip %} codigoPostal="{{ inv.receiver_zip }}" {% endif %}
+                {% if inv.receiver_colony %} colonia="{{ inv.receiver_colony }}" {% endif %}
+                {% if inv.receiver_state %} estado="{{ inv.receiver_state}}" {% endif %}
+                {% if inv.receiver_locality %} localidad="{{ inv.receiver_locality }}" {% endif %}
+                {% if inv.receiver_municipality %} municipio="{{ inv.receiver_municipality }}" {% endif %}
+                {% if inv.receiver_exterior_no %} noExterior="{{ inv.receiver_exterior_no }}" {% endif %}
+                {% if inv.receiver_interior_no %} noInterior="{{ inv.receiver_interior_no }}" {% endif %}
+                {% if inv.receiver_country %} pais="{{ inv.receiver_country }}" {% endif %}
+                />
+        {% endif %}
     </cfdi:Receptor>
     {% if inv.invoice_lines %}
     <cfdi:Conceptos>
@@ -69,15 +75,19 @@
             cantidad="{{ invoice_line.quantity }}"
             descripcion="{{ (invoice_line.name) }}"
             importe="{{ invoice_line.subtotal_wo_discount or 0.0 }}"
-            noIdentificacion="{{ (invoice_line.code ) or 'S/N' }}"
+            {% if invoice_line.code %}
+                noIdentificacion="{{ (invoice_line.code ) or 'S/N' }}"
+            {% endif %}
             unidad="{{ invoice_line.unit }}"
             valorUnitario="{{ invoice_line.price_unit or 0.0 }}"/>
         {% endfor %}
     </cfdi:Conceptos>
     {% endif %}
     <cfdi:Impuestos
-        totalImpuestosTrasladados="{{ inv.taxes.total_transferred }}"
-        totalImpuestosRetenidos="{{ inv.taxes.total_withhold }}">
+        {% if inv.taxes.total_transferred  or inv.taxes.total_withhold %}
+            totalImpuestosTrasladados="{{ inv.taxes.total_transferred }}"
+            totalImpuestosRetenidos="{{ inv.taxes.total_withhold }}"
+        {% endif %}>
             {%if inv.taxes.withholding %}
             <cfdi:Retenciones>
                 {%for withhold in inv.taxes.withholding %}
@@ -98,5 +108,6 @@
             </cfdi:Traslados>
             {% endif %}
     </cfdi:Impuestos>
+    <cfdi:Complemento/>
     <cfdi:Addenda/>
 </cfdi:Comprobante>

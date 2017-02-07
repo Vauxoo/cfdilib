@@ -47,6 +47,8 @@ class TestCfdilib(unittest.TestCase):
             self._get_test_file('balance.txt'))
         self.dict_moves = eval(
             self._get_test_file('moves.txt'))
+        self.dict_payroll = eval(
+            self._get_test_file('payroll.txt'))
         self.real_document_xml = join(
             dirname(cfdilib.__file__), "..", "tests", "demo", 'cfdv32.xml')
         self.test_plain = join(
@@ -210,6 +212,16 @@ class TestCfdilib(unittest.TestCase):
         """Updating XSD of CFDIv32 Only local ignored in travis"""
         # Moved to script in root folder.
         pass
+
+    def test_009_get_payroll(self):
+        """With a given valid dict an
+        payroll object is created in debug_mode"""
+        payroll = cfdv32.get_payroll(self.dict_payroll, debug_mode=True)
+        self.assertTrue(payroll.document,
+                        'A valid dictionary gave error with the payroll %s' % payroll.ups)
+        self.assertFalse(
+            bool(payroll.ups),
+            'A valid dictionary gave error payroll %s' % payroll.document)
 
 
 if __name__ == '__main__':

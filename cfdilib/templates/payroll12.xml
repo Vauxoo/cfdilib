@@ -1,0 +1,137 @@
+{% set pay = inv.payroll %}
+<nomina12:Nomina
+    xmlns:nomina12="http://www.sat.gob.mx/nomina12"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.sat.gob.mx/nomina12 http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/Complementoscfdi/nomina12.xsd"
+    Version="1.2"
+    TipoNomina="{{ pay.type }}"
+    FechaPago="{{ pay.payment_date }}"
+    FechaInicialPago="{{ pay.date_from }}"
+    FechaFinalPago="{{ pay.date_to }}"
+    NumDiasPagados="{{ pay.number_of_days }}"
+    TotalPercepciones="{{ pay.total_perceptions }}"
+    TotalDeducciones="{{ pay.total_deductions }}"
+    {% if pay.other_payments %} TotalOtrosPagos="{{ pay.total_other }}" {% endif %}>
+    <nomina12:Emisor
+        {% if pay.curp_emitter %} Curp="{{ pay.curp_emitter }}" {% endif %}
+        {% if pay.employer_register %} RegistroPatronal="{{ pay.employer_register }}" {% endif %}
+        RfcPatronOrigen="{{ pay.vat_emitter }}">
+        {% if pay.source_sncf %}
+        <nomina12:EntidadSNCF
+            OrigenRecurso="{{ pay.source_sncf }}"
+            {% if pay.amount_sncf %} MontoRecursoPropio="{{ pay.amount_sncf }}" {% endif %}/>
+        {% endif %}
+    </nomina12:Emisor>
+    <nomina12:Receptor
+        Curp="{{ pay.curp_emp }}"
+        {% if pay.nss_emp %} NumSeguridadSocial="{{ pay.nss_emp }}" {% endif %}
+        FechaInicioRelLaboral="{{ pay.date_start }}"
+        Antigüedad="{{ pay.seniority_emp }}"
+        TipoContrato="{{ pay.contract_type  }}"
+        Sindicalizado="{{ pay.emp_syndicated }}"
+        {% if pay.working_day %} TipoJornada="{{ pay.working_day }}" {% endif %}
+        TipoRegimen="{{ pay.emp_regimen_type }}"
+        NumEmpleado="{{ pay.no_emp }}"
+        Departamento="{{ pay.departament }}"
+        Puesto="{{ pay.emp_job }}"
+        {% if pay.emp_risk %} RiesgoPuesto="{{ pay.emp_risk }}" {% endif %}
+        PeriodicidadPago="{{ pay.payment_periodicity }}"
+        {% if pay.emp_bank %} Banco="{{ pay.emp_bank }}" {% endif %}
+        {% if pay.emp_account %} CuentaBancaria="{{ pay.emp_account }}" {% endif %}
+        SalarioBaseCotApor="{{ pay.emp_base_salary }}"
+        SalarioDiarioIntegrado="{{ pay.emp_diary_salary }}"
+        ClaveEntFed="{{ pay.emp_state }}">
+        {% for out in pay.outsourcing%}
+            <nomina12:SubContratacion
+                RfcLabora="{{ pay.vat_outsourcing }}"
+                PorcentajeTiempo="{{ pay.porcent_outsourcing }}"/>
+        {% endfor %}
+    </nomina12:Receptor>
+    <nomina12:Percepciones
+        TotalSueldos="{{ pay.total_salaries }}"
+        {% if pay.total_compensation %}TotalSeparacionIndemnizacion="{{ pay.total_compensation }}" {%endif%}
+        {% if pay.total_retirement %}TotalJubilacionPensionRetiro="{{ pay.total_retirement }}" {%endif%}
+        TotalGravado="{{ pay.total_taxed }}"
+        TotalExento="{{ pay.total_exempt }}">
+        {% for perception in pay.perceptions %}
+            <nomina12:Percepcion
+                TipoPercepcion="{{ perception.type }}"
+                Clave="{{ perception.key }}"
+                Concepto="{{ perception.concept }}"
+                ImporteGravado="{{ perception.amount_g or 0.0 }}"
+                ImporteExento="{{ perception.amount_e or 0.0 }}">
+                {% if perception.action %}
+                    <nomina12:AccionesOTitulos
+                        ValorMercado="{{ perception.action.value }}"
+                        PrecioAlOtorgarse="{{ perception.action.price }}"/>
+                {% endif %}
+                {% for extra in perception.extra_hours %}
+                    <nomina12:HorasExtra
+                        Dias="{{ extra.days }}"
+                        TipoHoras="{{ extra.type }}"
+                        HorasExtra="{{ extra.hours }}"
+                        ImportePagado="{{ extra.amount }}"/>
+                {% endfor %}
+            </nomina12:Percepcion>
+        {% endfor %}
+        {% if pay.total_retirement %}
+            <nomina12:JubilacionPensionRetiro
+                {% if pay.retirement_one_ex %} TotalUnaExhibicion="{{ pay.retirement_one_ex }}" {% endif %}
+                {% if pay.retirement_partiality %} TotalParcialidad="{{ pay.retirement_partiality }}" {% endif %}
+                {% if pay.retirement_amount_diary %} MontoDiario="{{ pay.retirement_amount_diary }}" {% endif %}
+                IngresoAcumulable="{{ pay.retirement_cumulative }}"
+                IngresoNoAcumulable="{{ pay.retirement_no_cumulative }}"/>
+        {% endif %}
+        {% if pay.total_compensation %}
+            <nomina12:SeparacionIndemnizacion
+                TotalPagado="{{ pay.compensation_paid }}"
+                NumAñosServicio="{{ pay.compensation_years }}"
+                UltimoSueldoMensOrd="{{ pay.compensation_last_salary }}"
+                IngresoAcumulable="{{ pay.compensation_cumulative }}"
+                IngresoNoAcumulable="{{ pay.compensation_no_cumulative }}"/>
+        {% endif %}
+    </nomina12:Percepciones>
+    <nomina12:Deducciones
+        TotalOtrasDeducciones="{{ pay.total_other_deductions }}"
+        {% if pay.show_total_taxes_withheld == True %}TotalImpuestosRetenidos="{{ pay.total_taxes_withheld }}" {% endif %}>
+        {% for deduction in pay.deductions %}
+            <nomina12:Deduccion
+                TipoDeduccion="{{ deduction.type }}"
+                Clave="{{ deduction.key }}"
+                Concepto="{{ deduction.concept }}"
+                Importe="{{ deduction.amount }}"/>
+        {% endfor %}
+    </nomina12:Deducciones>
+    {% if pay.other_payments %}
+    <nomina12:OtrosPagos>
+        {% for payment in pay.other_payments %}
+            <nomina12:OtroPago
+                TipoOtroPago="{{ payment.type }}"
+                Clave="{{ payment.key }}"
+                Concepto="{{ payment.concept }}"
+                Importe="{{ payment.amount }}">
+                {% if payment.subsidy %}
+                    <nomina12:SubsidioAlEmpleo
+                        SubsidioCausado="{{ payment.subsidy }}"/>
+                {% endif %}
+                {% if payment.compensation %}
+                    <nomina12:CompensacionSaldosAFavor
+                        SaldoAFavor="{{ payment.compensation.amount }}"
+                        Año="{{ payment.compensation.year }}"
+                        RemanenteSalFav="{{ payment.compensation.rem }}"/>
+                {% endif %}
+            </nomina12:OtroPago>
+        {% endfor %}
+    </nomina12:OtrosPagos>
+    {% endif %}
+    {% if pay.inabilities %}
+    <nomina12:Incapacidades>
+        {% for inability in pay.inabilities%}
+            <nomina12:Incapacidad
+                DiasIncapacidad="{{ inability.days }}"
+                TipoIncapacidad="{{ inability.type }}"
+                ImporteMonetario="{{ inability.amount }}"/>
+        {% endfor %}
+    </nomina12:Incapacidades>
+    {% endif %}
+</nomina12:Nomina>
