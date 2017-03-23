@@ -6,10 +6,21 @@ from abc import ABCMeta, abstractmethod
 from tempfile import NamedTemporaryFile
 
 from lxml import etree
+from contextlib import contextmanager
 from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import UndefinedError
 
 from .tools import tools
+
+
+@contextmanager
+def change_path():
+    old_path = os.getcwd()
+    try:
+        yield
+        os.chdir(old_path)
+    finally:
+        os.chdir(old_path)
 
 
 class Struct(object):
@@ -30,7 +41,6 @@ class Struct(object):
             if isinstance(v, list):
                 # import pdb; pdb.set_trace()
                 self.__dict__[k] = [Struct(x) for x in v]
-
 
 
 class BaseDocument:
@@ -161,8 +171,15 @@ class BaseDocument:
         :rtype: bool
         """
         # TODO: be able to get doc for error given an xsd.
-        schema_root = etree.parse(StringIO(schema_str))
-        schema = etree.XMLSchema(schema_root)
+        # Changed path to allow have xsd that are imported by others xsd in the
+        # same library, and not call to SAT page each time that is generated
+        # a new XML.
+        with change_path():
+            path = os.path.join(
+                os.path.dirname(os.path.realpath(__file__)), 'templates')
+            os.chdir(path)
+            schema_root = etree.parse(StringIO(schema_str))
+            schema = etree.XMLSchema(schema_root)
         try:
             tree = etree.parse(StringIO(xml_valid.encode('UTF-8')))
             schema.assertValid(tree)
