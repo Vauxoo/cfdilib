@@ -5,6 +5,11 @@ History
 latest
 ------
 
+Welcome to payroll generation
+
+0.3.5
+-----
+
 Now the template 3.2 has a placeholder for addenda.
 
 0.3.4
