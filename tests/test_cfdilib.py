@@ -49,6 +49,7 @@ class TestCfdilib(unittest.TestCase):
             self._get_test_file('moves.txt'))
         self.dict_payroll = eval(
             self._get_test_file('payroll.txt'))
+        self.dict_cfdi33 = eval(self._get_test_file('basic_invoice_33.txt'))
         self.real_document_xml = join(
             dirname(cfdilib.__file__), "..", "tests", "demo", 'cfdv32.xml')
         self.test_plain = join(
@@ -222,6 +223,17 @@ class TestCfdilib(unittest.TestCase):
         self.assertFalse(
             bool(payroll.ups),
             'A valid dictionary gave error payroll %s' % payroll.document)
+
+    def test_010_get_cfdi33(self):
+        """With a given valid dict an
+        cfdi33 object is created in debug_mode"""
+        invoice = cfdv32.get_cfdi(self.dict_cfdi33, debug_mode=True)
+        self.assertTrue(
+            invoice.document,
+            'A valid dictionary gave error with the CFDI 3.3 %s' % invoice.ups)
+        self.assertFalse(
+            bool(invoice.ups),
+            'A valid dictionary gave error CFDI 3.3 %s' % invoice.document)
 
 
 if __name__ == '__main__':
