@@ -9,8 +9,8 @@
     FechaInicialPago="{{ pay.date_from }}"
     FechaFinalPago="{{ pay.date_to }}"
     NumDiasPagados="{{ pay.number_of_days }}"
-    TotalPercepciones="{{ pay.total_perceptions }}"
-    TotalDeducciones="{{ pay.total_deductions }}"
+    {% if pay.total_perceptions %} TotalPercepciones="{{ pay.total_perceptions }}" {% endif %}
+    {% if pay.total_deductions %} TotalDeducciones="{{ pay.total_deductions }}" {% endif %}
     {% if pay.other_payments %} TotalOtrosPagos="{{ pay.total_other }}" {% endif %}>
     <nomina12:Emisor
         {% if pay.curp_emitter %} Curp="{{ pay.curp_emitter }}" {% endif %}
@@ -47,61 +47,65 @@
                 PorcentajeTiempo="{{ pay.porcent_outsourcing }}"/>
         {% endfor %}
     </nomina12:Receptor>
-    <nomina12:Percepciones
-        TotalSueldos="{{ pay.total_salaries }}"
-        {% if pay.total_compensation %}TotalSeparacionIndemnizacion="{{ pay.total_compensation }}" {%endif%}
-        {% if pay.total_retirement %}TotalJubilacionPensionRetiro="{{ pay.total_retirement }}" {%endif%}
-        TotalGravado="{{ pay.total_taxed }}"
-        TotalExento="{{ pay.total_exempt }}">
-        {% for perception in pay.perceptions %}
-            <nomina12:Percepcion
-                TipoPercepcion="{{ perception.type }}"
-                Clave="{{ perception.key }}"
-                Concepto="{{ perception.concept }}"
-                ImporteGravado="{{ perception.amount_g or 0.0 }}"
-                ImporteExento="{{ perception.amount_e or 0.0 }}">
-                {% if perception.action %}
-                    <nomina12:AccionesOTitulos
-                        ValorMercado="{{ perception.action.value }}"
-                        PrecioAlOtorgarse="{{ perception.action.price }}"/>
-                {% endif %}
-                {% for extra in perception.extra_hours %}
-                    <nomina12:HorasExtra
-                        Dias="{{ extra.days }}"
-                        TipoHoras="{{ extra.type }}"
-                        HorasExtra="{{ extra.hours }}"
-                        ImportePagado="{{ extra.amount }}"/>
-                {% endfor %}
-            </nomina12:Percepcion>
-        {% endfor %}
-        {% if pay.total_retirement %}
-            <nomina12:JubilacionPensionRetiro
-                {% if pay.retirement_one_ex %} TotalUnaExhibicion="{{ pay.retirement_one_ex }}" {% endif %}
-                {% if pay.retirement_partiality %} TotalParcialidad="{{ pay.retirement_partiality }}" {% endif %}
-                {% if pay.retirement_amount_diary %} MontoDiario="{{ pay.retirement_amount_diary }}" {% endif %}
-                IngresoAcumulable="{{ pay.retirement_cumulative }}"
-                IngresoNoAcumulable="{{ pay.retirement_no_cumulative }}"/>
-        {% endif %}
-        {% if pay.total_compensation %}
-            <nomina12:SeparacionIndemnizacion
-                TotalPagado="{{ pay.compensation_paid }}"
-                NumAñosServicio="{{ pay.compensation_years }}"
-                UltimoSueldoMensOrd="{{ pay.compensation_last_salary }}"
-                IngresoAcumulable="{{ pay.compensation_cumulative }}"
-                IngresoNoAcumulable="{{ pay.compensation_no_cumulative }}"/>
-        {% endif %}
-    </nomina12:Percepciones>
-    <nomina12:Deducciones
-        TotalOtrasDeducciones="{{ pay.total_other_deductions }}"
-        {% if pay.show_total_taxes_withheld == True %}TotalImpuestosRetenidos="{{ pay.total_taxes_withheld }}" {% endif %}>
-        {% for deduction in pay.deductions %}
-            <nomina12:Deduccion
-                TipoDeduccion="{{ deduction.type }}"
-                Clave="{{ deduction.key }}"
-                Concepto="{{ deduction.concept }}"
-                Importe="{{ deduction.amount }}"/>
-        {% endfor %}
-    </nomina12:Deducciones>
+    {% if pay.total_perceptions %}
+        <nomina12:Percepciones
+            TotalSueldos="{{ pay.total_salaries }}"
+            {% if pay.total_compensation %} TotalSeparacionIndemnizacion="{{ pay.total_compensation }}" {%endif%}
+            {% if pay.total_retirement %} TotalJubilacionPensionRetiro="{{ pay.total_retirement }}" {%endif%}
+            TotalGravado="{{ pay.total_taxed }}"
+            TotalExento="{{ pay.total_exempt }}">
+            {% for perception in pay.perceptions %}
+                <nomina12:Percepcion
+                    TipoPercepcion="{{ perception.type }}"
+                    Clave="{{ perception.key }}"
+                    Concepto="{{ perception.concept }}"
+                    ImporteGravado="{{ perception.amount_g or 0.0 }}"
+                    ImporteExento="{{ perception.amount_e or 0.0 }}">
+                    {% if perception.action %}
+                        <nomina12:AccionesOTitulos
+                            ValorMercado="{{ perception.action.value }}"
+                            PrecioAlOtorgarse="{{ perception.action.price }}"/>
+                    {% endif %}
+                    {% for extra in perception.extra_hours %}
+                        <nomina12:HorasExtra
+                            Dias="{{ extra.days }}"
+                            TipoHoras="{{ extra.type }}"
+                            HorasExtra="{{ extra.hours }}"
+                            ImportePagado="{{ extra.amount }}"/>
+                    {% endfor %}
+                </nomina12:Percepcion>
+            {% endfor %}
+            {% if pay.total_retirement %}
+                <nomina12:JubilacionPensionRetiro
+                    {% if pay.retirement_one_ex %} TotalUnaExhibicion="{{ pay.retirement_one_ex }}" {% endif %}
+                    {% if pay.retirement_partiality %} TotalParcialidad="{{ pay.retirement_partiality }}" {% endif %}
+                    {% if pay.retirement_amount_diary %} MontoDiario="{{ pay.retirement_amount_diary }}" {% endif %}
+                    IngresoAcumulable="{{ pay.retirement_cumulative }}"
+                    IngresoNoAcumulable="{{ pay.retirement_no_cumulative }}"/>
+            {% endif %}
+            {% if pay.total_compensation %}
+                <nomina12:SeparacionIndemnizacion
+                    TotalPagado="{{ pay.compensation_paid }}"
+                    NumAñosServicio="{{ pay.compensation_years }}"
+                    UltimoSueldoMensOrd="{{ pay.compensation_last_salary }}"
+                    IngresoAcumulable="{{ pay.compensation_cumulative }}"
+                    IngresoNoAcumulable="{{ pay.compensation_no_cumulative }}"/>
+            {% endif %}
+        </nomina12:Percepciones>
+    {% endif %}
+    {% if pay.total_deductions %}
+        <nomina12:Deducciones
+            TotalOtrasDeducciones="{{ pay.total_other_deductions }}"
+            {% if pay.show_total_taxes_withheld == True %}TotalImpuestosRetenidos="{{ pay.total_taxes_withheld }}" {% endif %}>
+            {% for deduction in pay.deductions %}
+                <nomina12:Deduccion
+                    TipoDeduccion="{{ deduction.type }}"
+                    Clave="{{ deduction.key }}"
+                    Concepto="{{ deduction.concept }}"
+                    Importe="{{ deduction.amount }}"/>
+            {% endfor %}
+        </nomina12:Deducciones>
+    {% endif %}
     {% if pay.other_payments %}
     <nomina12:OtrosPagos>
         {% for payment in pay.other_payments %}
