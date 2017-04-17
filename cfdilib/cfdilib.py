@@ -204,7 +204,7 @@ class BaseDocument:
         cached = StringIO()
         document = u''
         try:
-            document = self.template.render(inv=self)
+            document = self.template.render(rep=self)
         except UndefinedError as ups:
             self.ups = ups
 
