@@ -1,7 +1,3 @@
-# This is the perfect File with a perfect formed example for:
-# schema: cdfv33.xsd
-# template: cfdv33.xml
-
 {
     'serie': 'VAU',
     'number': 'ABC456',
@@ -23,13 +19,13 @@
     'emitter_rfc': 'VAU111017CG9',
     'emitter_name': 'Vauxoo SA de CV',
     'emitter_fiscal_position': '601',
-    'receiver_rfc': 'ECI0006019E0',
+    'receiver_rfc': False,
     'receiver_name': 'Some Customer SC',
     'receiver_country': 'MEX',
     'receiver_reg_trib': '0000000000000',
     'receiver_use_cfdi': 'G03',
     'invoice_lines': [{
-        'code_sat': '84111505',
+        'code_sat': False,
         'code': 'XYZ',
         'quantity': 1.0,
         'code_unit': 'ACT',

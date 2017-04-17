@@ -1,4 +1,4 @@
-# This is the perfect File with a perfect formed example for:
+# What if I send a erroneous parameter 'emitter_rfc' failing with a constraint in the xsd.
 # schema: cdfv33.xsd
 # template: cfdv33.xml
 
@@ -20,7 +20,6 @@
     'emitter_zip': '37205',
     'cfdi_related_type': '01',
     'cfdi_related': [{'uuid': '61C47F1C-B9A6-4E99-ABFD-C967E07D476E'}],
-    'emitter_rfc': 'VAU111017CG9',
     'emitter_name': 'Vauxoo SA de CV',
     'emitter_fiscal_position': '601',
     'receiver_rfc': 'ECI0006019E0',
