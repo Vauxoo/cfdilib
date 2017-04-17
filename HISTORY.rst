@@ -5,6 +5,11 @@ History
 latest
 ------
 
+Welcome to cfdi 3.3
+
+0.4.0
+-----
+
 Welcome to payroll generation
 
 0.3.5
