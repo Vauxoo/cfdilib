@@ -157,6 +157,6 @@ class Payroll12(BaseDocument):
         #       we can not use different algorithms here
         self.xstl = super(Payroll12, self).set_xslt()
 
+
 def get_payroll(dict_payroll, debug_mode=False):
     return Payroll12(dict_payroll, debug_mode=debug_mode)
-

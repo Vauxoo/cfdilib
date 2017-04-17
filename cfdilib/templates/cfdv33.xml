@@ -1,0 +1,107 @@
+<cfdi:Comprobante
+    xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd"
+    xmlns:cfdi="http://www.sat.gob.mx/cfd/3"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    Version="3.3"
+    Serie="{{ inv.serie }}"
+    Folio="{{ inv.number }}"
+    Fecha="{{ inv.date_invoice_tz }}"
+    Sello=""
+    FormaPago="{{ inv.payment_policy }}"
+    NoCertificado="{{ inv.certificate_number }}"
+    Certificado="{{ inv.certificate }}"
+    CondicionesDePago="{{ inv.conditions }}"
+    SubTotal="{{ inv.subtotal or 0.0 }}"
+    Descuento="{{ inv.discount_amount }}"
+    Moneda="{{ inv.currency }}"
+    TipoCambio="{{ inv.rate }}"
+    Total="{{ inv.amount_total or 0.0}}"
+    TipoDeComprobante="{{ inv.document_type }}"
+    MetodoPago="{{ inv.pay_method }}"
+    LugarExpedicion="{{ inv.emitter_zip }}"
+    {% if inv.confirmation %} Confirmacion="{{ inv.confirmation }}" {% endif %}>
+    {% if inv.cfdi_related_type %}
+        <cfdi:CfdiRelacionados
+            TipoRelacion="{{ inv.cfdi_related_type }}">
+            {% for cfdi in inv.cfdi_related %}
+                <cfdi:CfdiRelacionado UUID="{{ cfdi.uuid }}"/>
+            {% endfor %}
+        </cfdi:CfdiRelacionados>
+    {% endif %}
+    <cfdi:Emisor
+        Rfc="{{ inv.emitter_rfc }}"
+        Nombre="{{ inv.emitter_name }}"
+        RegimenFiscal="{{ inv.emitter_fiscal_position or ''  }}"/>
+    <cfdi:Receptor
+        Rfc="{{ inv.receiver_rfc }}"
+        {% if inv.receiver_name %} Nombre="{{ inv.receiver_name }}" {% endif %}
+        {% if inv.receiver_country %} ResidenciaFiscal="{{ inv.receiver_country }}" {% endif %}
+        {% if inv.receiver_reg_trib %} NumRegIdTrib="{{ inv.receiver_reg_trib }}" {% endif %}
+        UsoCFDI="{{ inv.receiver_use_cfdi }}"/>
+    <cfdi:Conceptos>
+        {% for line in inv.invoice_lines %}
+        <cfdi:Concepto
+            ClaveProdServ="{{ line.code_sat }}"
+            {% if line.code %} NoIdentificacion="{{ line.code }}" {% endif %}
+            Cantidad="{{ line.quantity }}"
+            ClaveUnidad="{{ line.code_unit }}"
+            Unidad="{{ line.unit }}"
+            Descripcion="{{ line.name }}"
+            ValorUnitario="{{ line.price_unit or 0.0 }}"
+            Importe="{{ line.subtotal_wo_discount or 0.0 }}"
+            Descuento="{{ line.discount }}">
+            <cfdi:Impuestos>
+                {% if line.taxes.transferred %}
+                    <cfdi:Traslados>
+                    {% for tax in line.taxes.transferred %}
+                        <cfdi:Traslado
+                            Base="{{ tax.base or 0.0  }}"
+                            Impuesto="{{ tax.name or 0.0 }}"
+                            TipoFactor="{{ tax.type or 0.0 }}"
+                            TasaOCuota="{{ tax.rate or 0.0 }}"
+                            Importe="{{ tax.amount or 0.0 }}"/>
+                    {% endfor %}
+                    </cfdi:Traslados>
+                {% endif %}
+                {% if line.taxes.withholding %}
+                    <cfdi:Retenciones>
+                    {% for tax in line.taxes.withholding %}
+                        <cfdi:Retencion
+                            Base="{{ tax.base or 0.0  }}"
+                            Impuesto="{{ tax.name or 0.0 }}"
+                            TipoFactor="{{ tax.type or 0.0 }}"
+                            TasaOCuota="{{ tax.rate or 0.0 }}"
+                            Importe="{{ tax.amount or 0.0 }}"/>
+                    {% endfor %}
+                    </cfdi:Retenciones>
+                {% endif %}
+            </cfdi:Impuestos>
+        </cfdi:Concepto>
+        {% endfor %}
+    </cfdi:Conceptos>
+    <cfdi:Impuestos
+        TotalImpuestosTrasladados="{{ inv.taxes.total_transferred }}"
+        TotalImpuestosRetenidos="{{ inv.taxes.total_withhold }}">
+            {%if inv.taxes.withholding %}
+            <cfdi:Retenciones>
+                {%for withhold in inv.taxes.withholding %}
+                    <cfdi:Retencion
+                        Importe="{{ withhold.amount or 0.0 }}"
+                        Impuesto="{{ withhold.name }}"/>
+                {% endfor %}
+            </cfdi:Retenciones>
+            {% endif %}
+            {% if inv.taxes.transferred %}
+            <cfdi:Traslados>
+                {% for tax in inv.taxes.transferred %}
+                    <cfdi:Traslado
+                        Impuesto="{{ tax.name }}"
+                        TipoFactor="{{ tax.type }}"
+                        TasaOCuota="{{ tax.rate or 0.0 }}"
+                        Importe="{{ tax.amount or 0.0 }}"/>
+                {% endfor %}
+            </cfdi:Traslados>
+            {% endif %}
+    </cfdi:Impuestos>
+    <cfdi:Complemento/>
+</cfdi:Comprobante>

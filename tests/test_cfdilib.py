@@ -13,7 +13,7 @@ from os.path import join, dirname, isfile
 from os import environ, unlink
 import unittest
 
-from cfdilib import cfdilib, cfdv32
+from cfdilib import cfdilib, cfdv32, cfdv33
 from cfdilib.tools import tools
 
 
@@ -49,6 +49,11 @@ class TestCfdilib(unittest.TestCase):
             self._get_test_file('moves.txt'))
         self.dict_payroll = eval(
             self._get_test_file('payroll.txt'))
+        self.dict_cfdi33 = eval(self._get_test_file('basic_invoice_33.txt'))
+        self.dict_invoice_basic_33_errored = eval(
+            self._get_test_file('basic_invoice_33_errored.txt'))
+        self.dict_invoice_basic_33_false = eval(
+            self._get_test_file('basic_invoice_33_false.txt'))
         self.real_document_xml = join(
             dirname(cfdilib.__file__), "..", "tests", "demo", 'cfdv32.xml')
         self.test_plain = join(
@@ -222,6 +227,37 @@ class TestCfdilib(unittest.TestCase):
         self.assertFalse(
             bool(payroll.ups),
             'A valid dictionary gave error payroll %s' % payroll.document)
+
+    def test_010_get_cfdi33(self):
+        """With a given valid dict an
+        cfdi33 object is created in debug_mode"""
+        invoice = cfdv33.get_cfdi(self.dict_cfdi33, debug_mode=True)
+        self.assertTrue(
+            invoice.document,
+            'A valid dictionary gave error with the CFDI 3.3 %s' % invoice.ups)
+        self.assertFalse(
+            bool(invoice.ups),
+            'A valid dictionary gave error CFDI 3.3 %s' % invoice.document)
+
+    def test_014_get_errored_cfdi33(self):
+        """With a given invalid dict raise properly errors on ups object"""
+        invoice = cfdv33.get_cfdi(self.dict_invoice_basic_33_errored)
+        self.assertTrue(bool(invoice.ups),
+                        'An invalid dictionary gave a '
+                        'valid output, that is wrong.')
+        # Ok it failed!, then we assert if
+        # the message is the one I expected for.
+        self.assertTrue(invoice.ups.message.find('Emisor') > 0,
+                        'The expected failed entry Emisor was erroneous. %s' % invoice.ups.message)
+
+        invoice = cfdv33.get_cfdi({})
+        self.assertTrue(bool(invoice.ups),
+                        'An empty dict should give me the validation')
+
+        invoice = cfdv33.get_cfdi(self.dict_invoice_basic_33_false)
+        self.assertNotIn('False', invoice.ups.message,
+                         'Passing a False value return a False string which is'
+                         'incorrect  %s ' % invoice.ups.message)
 
 
 if __name__ == '__main__':
