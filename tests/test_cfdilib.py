@@ -250,11 +250,11 @@ class TestCfdilib(unittest.TestCase):
         self.assertTrue(invoice.ups.message.find('Emisor') > 0,
                         'The expected failed entry Emisor was erroneous. %s' % invoice.ups.message)
 
-        invoice = cfdv33.get_invoice({})
+        invoice = cfdv33.get_cfdi({})
         self.assertTrue(bool(invoice.ups),
                         'An empty dict should give me the validation')
 
-        invoice = cfdv33.get_invoice(self.dict_invoice_basic_33_false)
+        invoice = cfdv33.get_cfdi(self.dict_invoice_basic_33_false)
         self.assertNotIn('False', invoice.ups.message,
                          'Passing a False value return a False string which is'
                          'incorrect  %s ' % invoice.ups.message)
