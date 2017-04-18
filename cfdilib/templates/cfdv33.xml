@@ -12,7 +12,7 @@
     Certificado="{{ inv.certificate }}"
     CondicionesDePago="{{ inv.conditions }}"
     SubTotal="{{ inv.subtotal or 0.0 }}"
-    Descuento="{{ inv.discount_amount }}"
+    {% if inv.discount_amount %} Descuento="{{ inv.discount_amount }}" {% endif %}
     Moneda="{{ inv.currency }}"
     TipoCambio="{{ inv.rate }}"
     Total="{{ inv.amount_total or 0.0}}"
@@ -49,7 +49,7 @@
             Descripcion="{{ line.name }}"
             ValorUnitario="{{ line.price_unit or 0.0 }}"
             Importe="{{ line.subtotal_wo_discount or 0.0 }}"
-            Descuento="{{ line.discount }}">
+            {% if line.discount %} Descuento="{{ line.discount }}" {% endif %}>
             <cfdi:Impuestos>
                 {% if line.taxes.transferred %}
                     <cfdi:Traslados>
