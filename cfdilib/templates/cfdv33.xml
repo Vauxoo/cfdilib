@@ -50,32 +50,34 @@
             ValorUnitario="{{ line.price_unit or 0.0 }}"
             Importe="{{ line.subtotal_wo_discount or 0.0 }}"
             {% if line.discount %} Descuento="{{ line.discount }}" {% endif %}>
-            <cfdi:Impuestos>
-                {% if line.taxes.transferred %}
-                    <cfdi:Traslados>
-                    {% for tax in line.taxes.transferred %}
-                        <cfdi:Traslado
-                            Base="{{ tax.base or 0.0  }}"
-                            Impuesto="{{ tax.name or 0.0 }}"
-                            TipoFactor="{{ tax.type or 0.0 }}"
-                            TasaOCuota="{{ tax.rate or 0.0 }}"
-                            Importe="{{ tax.amount or 0.0 }}"/>
-                    {% endfor %}
-                    </cfdi:Traslados>
-                {% endif %}
-                {% if line.taxes.withholding %}
-                    <cfdi:Retenciones>
-                    {% for tax in line.taxes.withholding %}
-                        <cfdi:Retencion
-                            Base="{{ tax.base or 0.0  }}"
-                            Impuesto="{{ tax.name or 0.0 }}"
-                            TipoFactor="{{ tax.type or 0.0 }}"
-                            TasaOCuota="{{ tax.rate or 0.0 }}"
-                            Importe="{{ tax.amount or 0.0 }}"/>
-                    {% endfor %}
-                    </cfdi:Retenciones>
-                {% endif %}
-            </cfdi:Impuestos>
+            {% if line.taxes %}
+                <cfdi:Impuestos>
+                    {% if line.taxes.transferred %}
+                        <cfdi:Traslados>
+                        {% for tax in line.taxes.transferred %}
+                            <cfdi:Traslado
+                                Base="{{ tax.base or 0.0  }}"
+                                Impuesto="{{ tax.name or 0.0 }}"
+                                TipoFactor="{{ tax.type or 0.0 }}"
+                                TasaOCuota="{{ tax.rate or 0.0 }}"
+                                Importe="{{ tax.amount or 0.0 }}"/>
+                        {% endfor %}
+                        </cfdi:Traslados>
+                    {% endif %}
+                    {% if line.taxes.withholding %}
+                        <cfdi:Retenciones>
+                        {% for tax in line.taxes.withholding %}
+                            <cfdi:Retencion
+                                Base="{{ tax.base or 0.0  }}"
+                                Impuesto="{{ tax.name or 0.0 }}"
+                                TipoFactor="{{ tax.type or 0.0 }}"
+                                TasaOCuota="{{ tax.rate or 0.0 }}"
+                                Importe="{{ tax.amount or 0.0 }}"/>
+                        {% endfor %}
+                        </cfdi:Retenciones>
+                    {% endif %}
+                </cfdi:Impuestos>
+            {% endif %}
         </cfdi:Concepto>
         {% endfor %}
     </cfdi:Conceptos>
