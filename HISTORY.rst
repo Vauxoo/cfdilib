@@ -5,6 +5,11 @@ History
 latest
 ------
 
+Some fixes regarding the fact that perceptions and taxes are optionals.
+
+0.5.0
+-----
+
 Welcome to cfdi 3.3
 
 0.4.0
