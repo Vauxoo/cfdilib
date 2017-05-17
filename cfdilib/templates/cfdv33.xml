@@ -10,7 +10,7 @@
     FormaPago="{{ inv.payment_policy }}"
     NoCertificado="{{ inv.certificate_number }}"
     Certificado="{{ inv.certificate }}"
-    CondicionesDePago="{{ inv.conditions }}"
+    {% if inv.conditions %} CondicionesDePago="{{ inv.conditions }}" {% endif %}
     SubTotal="{{ inv.subtotal or 0.0 }}"
     {% if inv.discount_amount %} Descuento="{{ inv.discount_amount }}" {% endif %}
     Moneda="{{ inv.currency }}"
