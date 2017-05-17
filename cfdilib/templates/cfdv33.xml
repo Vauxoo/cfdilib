@@ -3,11 +3,11 @@
     xmlns:cfdi="http://www.sat.gob.mx/cfd/3"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     Version="3.3"
-    Serie="{{ inv.serie }}"
-    Folio="{{ inv.number }}"
+    {% if inv.serie %} Serie="{{ inv.serie }}" {% endif %}
+    {% if inv.number %} Folio="{{ inv.number }}" {% endif %}
     Fecha="{{ inv.date_invoice_tz }}"
     Sello=""
-    FormaPago="{{ inv.payment_policy }}"
+    {% if inv.payment_policy %}FormaPago="{{ inv.payment_policy }}" {% endif %}
     NoCertificado="{{ inv.certificate_number }}"
     Certificado="{{ inv.certificate }}"
     {% if inv.conditions %} CondicionesDePago="{{ inv.conditions }}" {% endif %}
@@ -17,7 +17,7 @@
     TipoCambio="{{ inv.rate }}"
     Total="{{ inv.amount_total or 0.0}}"
     TipoDeComprobante="{{ inv.document_type }}"
-    MetodoPago="{{ inv.pay_method }}"
+    {% if inv.pay_method %} MetodoPago="{{ inv.pay_method }}" {% endif %}
     LugarExpedicion="{{ inv.emitter_zip }}"
     {% if inv.confirmation %} Confirmacion="{{ inv.confirmation }}" {% endif %}>
     {% if inv.cfdi_related_type %}
