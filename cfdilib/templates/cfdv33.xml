@@ -45,7 +45,7 @@
             {% if line.code %} NoIdentificacion="{{ line.code }}" {% endif %}
             Cantidad="{{ line.quantity }}"
             ClaveUnidad="{{ line.code_unit }}"
-            Unidad="{{ line.unit }}"
+            {% if line.unit %} Unidad="{{ line.unit }}" {% endif %}
             Descripcion="{{ line.name }}"
             ValorUnitario="{{ line.price_unit or 0.0 }}"
             Importe="{{ line.subtotal_wo_discount or 0.0 }}"
