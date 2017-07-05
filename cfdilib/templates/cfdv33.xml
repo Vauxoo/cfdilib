@@ -14,7 +14,7 @@
     SubTotal="{{ inv.subtotal or 0.0 }}"
     {% if inv.discount_amount %} Descuento="{{ inv.discount_amount }}" {% endif %}
     Moneda="{{ inv.currency }}"
-    TipoCambio="{{ inv.rate }}"
+    {% if inv.rate %} TipoCambio="{{ inv.rate }}" {% endif %}
     Total="{{ inv.amount_total or 0.0}}"
     TipoDeComprobante="{{ inv.document_type }}"
     {% if inv.pay_method %} MetodoPago="{{ inv.pay_method }}" {% endif %}
