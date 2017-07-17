@@ -5,6 +5,12 @@ History
 latest
 ------
 
+- Some values are now optionals.
+
+
+0.5.1
+-----
+
 Some fixes regarding the fact that perceptions and taxes are optionals.
 
 0.5.0
