@@ -59,8 +59,10 @@
                                 Base="{{ tax.base or 0.0  }}"
                                 Impuesto="{{ tax.name or 0.0 }}"
                                 TipoFactor="{{ tax.type or 0.0 }}"
-                                TasaOCuota="{{ tax.rate or 0.0 }}"
-                                Importe="{{ tax.amount or 0.0 }}"/>
+                                {% if tax.type != 'Exento' %}
+                                    TasaOCuota="{{ tax.rate or 0.0 }}"
+                                    Importe="{{ tax.amount or 0.0 }}"
+                                {% endif %}/>
                         {% endfor %}
                         </cfdi:Traslados>
                     {% endif %}
@@ -81,6 +83,7 @@
         </cfdi:Concepto>
         {% endfor %}
     </cfdi:Conceptos>
+    {% if inv.taxes.total_transferred != '0.00' or inv.taxes.total_withhold != '0.00' %}
     <cfdi:Impuestos
         TotalImpuestosTrasladados="{{ inv.taxes.total_transferred }}"
         TotalImpuestosRetenidos="{{ inv.taxes.total_withhold }}">
@@ -105,5 +108,6 @@
             </cfdi:Traslados>
             {% endif %}
     </cfdi:Impuestos>
+    {% endif %}
     <cfdi:Complemento/>
 </cfdi:Comprobante>
