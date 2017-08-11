@@ -221,7 +221,7 @@ class TestCfdilib(unittest.TestCase):
     def test_009_get_payroll(self):
         """With a given valid dict an
         payroll object is created in debug_mode"""
-        payroll = cfdv32.get_payroll(self.dict_payroll, debug_mode=True)
+        payroll = cfdv33.get_payroll(self.dict_payroll, debug_mode=True)
         self.assertTrue(payroll.document,
                         'A valid dictionary gave error with the payroll %s' % payroll.ups)
         self.assertFalse(
