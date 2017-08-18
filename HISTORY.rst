@@ -5,6 +5,12 @@ History
 latest
 ------
 
+- Added Payroll 1.2
+- Added pedimento concept for cfdi 3.3.
+
+0.5.2
+-----
+
 - Some values are now optionals.
 
 
