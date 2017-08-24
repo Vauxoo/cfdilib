@@ -49,6 +49,8 @@ class TestCfdilib(unittest.TestCase):
             self._get_test_file('moves.txt'))
         self.dict_payroll = eval(
             self._get_test_file('payroll.txt'))
+        self.dict_payment = eval(
+            self._get_test_file('payment.txt'))
         self.dict_cfdi33 = eval(self._get_test_file('basic_invoice_33.txt'))
         self.dict_invoice_basic_33_errored = eval(
             self._get_test_file('basic_invoice_33_errored.txt'))
@@ -258,6 +260,16 @@ class TestCfdilib(unittest.TestCase):
         self.assertNotIn('False', invoice.ups.message,
                          'Passing a False value return a False string which is'
                          'incorrect  %s ' % invoice.ups.message)
+
+    def test_015_get_payment10(self):
+        """With a given valid dict an
+        payment object is created in debug_mode"""
+        payment = cfdv33.get_payment10(self.dict_payment, debug_mode=True)
+        self.assertTrue(payment.document,
+                        'A valid dictionary gave error with the payment %s' % payment.ups)
+        self.assertFalse(
+            bool(payment.ups),
+            'A valid dictionary gave error payroll %s' % payment.document)
 
 
 if __name__ == '__main__':
