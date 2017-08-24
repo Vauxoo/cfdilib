@@ -1,0 +1,114 @@
+<cfdi:Comprobante
+    xmlns:cfdi="http://www.sat.gob.mx/cfd/3"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd http://www.sat.gob.mx/Pagos http://www.sat.gob.mx/sitio_internet/cfd/Pagos/Pagos10.xsd"
+    xmlns:Pago10="http://www.sat.gob.mx/Pagos"
+    Version="3.3"
+    {% if inv.serie %} Serie="{{ inv.serie }}" {% endif %}
+    {% if inv.number %} Folio="{{ inv.number }}" {% endif %}
+    Fecha="{{ inv.date_invoice_tz }}"
+    Sello=""
+    {% if inv.payment_policy %} FormaPago="{{ inv.payment_policy }}" {% endif %}
+    NoCertificado="{{ inv.certificate_number }}"
+    Certificado="{{ inv.certificate }}"
+    {% if inv.conditions %} CondicionesDePago="{{ inv.conditions }}" {% endif %}
+    SubTotal="{{ inv.subtotal or 0.0 }}"
+    {% if inv.discount_amount %} Descuento="{{ inv.discount_amount }}" {% endif %}
+    Moneda="{{ inv.currency }}"
+    {% if inv.rate %} TipoCambio="{{ inv.rate }}" {% endif %}
+    Total="{{ inv.amount_total or 0.0}}"
+    TipoDeComprobante="P"
+    {% if inv.pay_method %} MetodoPago="{{ inv.pay_method }}" {% endif %}
+    LugarExpedicion="{{ inv.emitter_zip }}"
+    {% if inv.confirmation %} Confirmacion="{{ inv.confirmation }}" {% endif %}>
+    {% if inv.cfdi_related_type %}
+        <cfdi:CfdiRelacionados
+            TipoRelacion="{{ inv.cfdi_related_type }}">
+            {% for cfdi in inv.cfdi_related %}
+                <cfdi:CfdiRelacionado UUID="{{ cfdi.uuid }}"/>
+            {% endfor %}
+        </cfdi:CfdiRelacionados>
+    {% endif %}
+    <cfdi:Emisor
+        Rfc="{{ inv.emitter_rfc }}"
+        Nombre="{{ inv.emitter_name }}"
+        RegimenFiscal="{{ inv.emitter_fiscal_position or ''  }}"/>
+    <cfdi:Receptor
+        Rfc="{{ inv.receiver_rfc }}"
+        {% if inv.receiver_name %} Nombre="{{ inv.receiver_name }}" {% endif %}
+        {% if inv.receiver_country %} ResidenciaFiscal="{{ inv.receiver_country }}" {% endif %}
+        {% if inv.receiver_reg_trib %} NumRegIdTrib="{{ inv.receiver_reg_trib }}" {% endif %}
+        UsoCFDI="{{ inv.receiver_use_cfdi }}"/>
+    <cfdi:Conceptos>
+        <cfdi:Concepto
+            ClaveProdServ="84111506"
+            Cantidad="1"
+            ClaveUnidad="ACT"
+            Descripcion="Pago"
+            ValorUnitario="0"
+            Importe="0">
+        </cfdi:Concepto>
+    </cfdi:Conceptos>
+    {% set pay = inv.payment %}
+    <cfdi:Complemento>
+        <Pago10:Pagos
+            Version="1.0">
+            <Pago10:Pago
+                FechaPago="{{ pay.date }}"
+                FormaDePagoP="{{ pay.way }}"
+                MonedaP="{{ pay.currency }}"
+                {% if pay.rate %} TipoCambioP="{{ pay.rate }}" {% endif %}
+                Monto="{{ pay.amount }}"
+                {% if pay.operation_no %} NumOperacion="{{ pay.operation_no }}" {% endif %}
+                {% if pay.vat_ord %} RfcEmisorCtaOrd="{{ pay.vat_ord }}" {% endif %}
+                {% if pay.name_ord %} NomBancoOrdExt="{{ pay.name_ord }}" {% endif %}
+                {% if pay.account_ord %} CtaOrdenante="{{ pay.account_ord }}" {% endif %}
+                {% if pay.vat_receiver %} RfcEmisorCtaBen="{{ pay.vat_receiver }}" {% endif %}
+                {% if pay.account_receiver %} CtaBeneficiario="{{ pay.account_receiver }}" {% endif %}
+                {% if pay.ent_type %} TipoCadPago="{{ pay.ent_type }}" {% endif %}
+                {% if pay.certificate %} CertPago="{{ pay.certificate }}" {% endif %}
+                {% if pay.string %} CadPago="{{ pay.string }}" {% endif %}
+                {% if pay.stamp %} SelloPago="{{ pay.stamp }}" {% endif %}>
+                {% for doc in pay.docs %}
+                    <Pago10:DoctoRelacionado
+                        IdDocumento="{{ doc.id }}"
+                        {% if doc.serie %} Serie="{{ doc.serie }}" {% endif %}
+                        {% if doc.number %} Folio="{{ doc.number }}" {% endif %}
+                        MonedaDR="{{ doc.currency }}"
+                        {% if doc.rate %} TipoCambioDR="{{ doc.rate }}" {% endif %}
+                        {% if doc.ent_method %} MetodoDePagoDR="{{ doc.ent_method }}" {% endif %}
+                        {% if doc.number_ent %} NumParcialidad="{{ doc.number_ent }}" {% endif %}
+                        {% if doc.previous_balance %} ImpSaldoAnt="{{ doc.previous_balance }}" {% endif %}
+                        {% if doc.amount %} ImpPagado="{{ doc.amount }}" {% endif %}
+                        {% if doc.remaining %} ImpSaldoInsoluto="{{ doc.remaining }}" {% endif %}/>
+                {% endfor %}
+                {% if pay.total_withhold or pay.total_taxes %}
+                    <Pago10:Impuestos
+                        {% if pay.total_withhold %} TotalImpuestosRetenidos="{{ pay.total_withhold }}" {% endif %}
+                        {% if pay.total_taxes %} TotalImpuestosTrasladados="{{ pay.total_taxes }}" {% endif %}>
+                        {% if pay.withhold %}
+                            <Pago10:Retenciones>
+                                {% for tax in pay.withhold %}
+                                    <Pago10:Retencion
+                                        Impuesto="{{ tax.tax }}"
+                                        Importe="{{ tax.amount }}"/>
+                                {% endfor %}
+                            </Pago10:Retenciones>
+                        {% endif %}
+                        {% if pay.taxes %}
+                            <Pago10:Traslados>
+                                {% for tax in pay.taxes %}
+                                    <Pago10:Traslado
+                                        Impuesto="{{ tax.tax }}"
+                                        TipoFactor="{{ tax.type }}"
+                                        TasaOCuota="{{ tax.rate }}"
+                                        Importe="{{ tax.amount }}"/>
+                                {% endfor %}
+                            </Pago10:Traslados>
+                        {% endif %}
+                    </Pago10:Impuestos>
+                {% endif %}
+            </Pago10:Pago>
+        </Pago10:Pagos>
+    </cfdi:Complemento>
+</cfdi:Comprobante>
