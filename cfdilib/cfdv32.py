@@ -39,16 +39,15 @@ def get_invoice(dict_invoice, debug_mode=False):
 
 class CFDICoA(BaseDocument):
     """CoA document
-    cfdi: v1.1 for Accounting."""
+    cfdi: v1.3 for Accounting."""
 
     def __init__(self, dict_accounts, debug_mode=False):
         self.template_fname = 'cfdi13coa.xml'
         # We explicitly cached into s3 with the local test then ensure use
         # the s3 url to use our cache. remove the tools.s3_url if you want to
         # load first in the future
-        self.xslt_fname = \
-            tools.s3_url('http://s3.vauxoo.com/esquemas/ContabilidadE/1_1/CatalogoCuentas/CatalogoCuentas_1_1.xslt')
-        self.global_namespace = 'http://www.sat.gob.mx/esquemas/ContabilidadE/1_1/CatalogosParaEsqContE'
+        self.xslt_fname = 'http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/CatalogoCuentas/CatalogoCuentas_1_2.xslt'
+        self.global_namespace = 'http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/CatalogosParaEsqContE'
         self.set_template(self.template_fname)
         super(CFDICoA, self).__init__(dict_accounts, debug_mode=debug_mode)
 
@@ -69,16 +68,15 @@ def get_coa(dict_accounts, debug_mode=False):
 
 class CFDIBalance(BaseDocument):
     """Balance XML document
-    cfdi: v1.1 for Accounting."""
+    cfdi: v1.3 for Accounting."""
 
     def __init__(self, dict_accounts, debug_mode=False):
         self.template_fname = 'cfdi13balance.xml'
         # We explicitly cached into s3 with the local test then ensure use
         # the s3 url to use our cache. remove the tools.s3_url if you want to
         # load first in the future
-        self.xslt_fname = \
-            tools.s3_url('http://s3.vauxoo.com/esquemas/ContabilidadE/1_1/BalanzaComprobacion/BalanzaComprobacion_1_1.xslt')
-        self.global_namespace = 'http://www.sat.gob.mx/esquemas/ContabilidadE/1_1/BalanzaComprobacion'
+        self.xslt_fname = 'http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/BalanzaComprobacion/BalanzaComprobacion_1_2.xslt'
+        self.global_namespace = 'http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/BalanzaComprobacion'
         self.set_template(self.template_fname)
         super(CFDIBalance, self).__init__(dict_accounts, debug_mode=debug_mode)
 
@@ -99,16 +97,15 @@ def get_balance(dict_balance, debug_mode=False):
 
 class CFDIMoves(BaseDocument):
     """Balance XML document
-    cfdi: v1.1 for Accounting."""
+    cfdi: v1.3 for Accounting."""
 
     def __init__(self, dict_accounts, debug_mode=False):
         self.template_fname = 'cfdi13moves.xml'
         # We explicitly cached into s3 with the local test then ensure use
         # the s3 url to use our cache. remove the tools.s3_url if you want to
         # load first in the future
-        self.xslt_fname = \
-            tools.s3_url('http://s3.vauxoo.com/esquemas/ContabilidadE/1_1/PolizasPeriodo/PolizasPeriodo_1_1.xslt')
-        self.global_namespace = 'http://www.sat.gob.mx/esquemas/ContabilidadE/1_1/PolizasPeriodo'
+        self.xslt_fname = 'http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/PolizasPeriodo/PolizasPeriodo_1_2.xslt'
+        self.global_namespace = 'http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/CatalogosParaEsqContE'
         self.set_template(self.template_fname)
         super(CFDIMoves, self).__init__(dict_accounts, debug_mode=debug_mode)
 
