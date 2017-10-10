@@ -42,7 +42,7 @@ class CFDICoA(BaseDocument):
     cfdi: v1.1 for Accounting."""
 
     def __init__(self, dict_accounts, debug_mode=False):
-        self.template_fname = 'cfdi11coa.xml'
+        self.template_fname = 'cfdi13coa.xml'
         # We explicitly cached into s3 with the local test then ensure use
         # the s3 url to use our cache. remove the tools.s3_url if you want to
         # load first in the future
@@ -72,7 +72,7 @@ class CFDIBalance(BaseDocument):
     cfdi: v1.1 for Accounting."""
 
     def __init__(self, dict_accounts, debug_mode=False):
-        self.template_fname = 'cfdi11balance.xml'
+        self.template_fname = 'cfdi13balance.xml'
         # We explicitly cached into s3 with the local test then ensure use
         # the s3 url to use our cache. remove the tools.s3_url if you want to
         # load first in the future
@@ -102,7 +102,7 @@ class CFDIMoves(BaseDocument):
     cfdi: v1.1 for Accounting."""
 
     def __init__(self, dict_accounts, debug_mode=False):
-        self.template_fname = 'cfdi11moves.xml'
+        self.template_fname = 'cfdi13moves.xml'
         # We explicitly cached into s3 with the local test then ensure use
         # the s3 url to use our cache. remove the tools.s3_url if you want to
         # load first in the future

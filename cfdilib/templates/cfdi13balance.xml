@@ -1,12 +1,12 @@
 <BCE:Balanza
-    xmlns:BCE="www.sat.gob.mx/esquemas/ContabilidadE/1_1/BalanzaComprobacion"
+    xmlns:BCE="http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/BalanzaComprobacion"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="www.sat.gob.mx/esquemas/ContabilidadE/1_1/BalanzaComprobacion http://www.sat.gob.mx/esquemas/ContabilidadE/1_1/BalanzaComprobacion/BalanzaComprobacion_1_1.xsd"
+    xsi:schemaLocation="http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/BalanzaComprobacion http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/BalanzaComprobacion/BalanzaComprobacion_1_3.xsd"
     Anio="{{ inv.year }}"
     Mes="{{ inv.month }}"
     RFC="{{ inv.vat }}"
     TipoEnvio="{{ inv.type }}"
-    Version="1.1">
+    Version="1.3">
 
 {% for acc in inv.accounts %}
     <BCE:Ctas
