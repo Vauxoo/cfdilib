@@ -4,7 +4,12 @@
     Version="1.3"
     RFC="{{ inv.vat }}"
     Mes="{{ inv.month }}"
-    Anio="{{ inv.year }}">
+    Anio="{{ inv.year }}"
+    {% if inv.certificate_id %}
+    Sello=""
+    noCertificado="{{ inv.certificate_id.serial_number   }}"
+    Certificado="{{ inv.certificate_id.content_pem   }}"
+    {% endif %}>
 {% for acc in inv.accounts %}
     <catalogocuentas:Ctas
         CodAgrup="{{ acc.code }}"
