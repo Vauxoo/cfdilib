@@ -2,8 +2,13 @@
 History
 =======
 
-latest
-------
+0.6.0
+-----
+
+- Welcome to electronic accounting 1.3
+
+0.5.3
+-----
 
 - Added Payroll 1.2
 - Added pedimento concept for cfdi 3.3.
