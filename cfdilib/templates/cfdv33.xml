@@ -114,4 +114,5 @@
     </cfdi:Impuestos>
     {% endif %}
     <cfdi:Complemento/>
+    <cfdi:Addenda/>
 </cfdi:Comprobante>
