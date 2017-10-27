@@ -2,6 +2,11 @@
 History
 =======
 
+0.6.1
+-----
+
+Added complement for Paymens
+
 0.6.0
 -----
 
