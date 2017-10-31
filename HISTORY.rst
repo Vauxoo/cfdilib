@@ -2,6 +2,11 @@
 History
 =======
 
+0.6.2
+-----
+
+Add new XSD version for CFDI 3.3
+
 0.6.1
 -----
 
