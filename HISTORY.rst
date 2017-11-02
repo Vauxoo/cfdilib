@@ -2,6 +2,11 @@
 History
 =======
 
+0.6.3
+-----
+
+Now certificate is optional on CFDI 3.3
+
 0.6.2
 -----
 
