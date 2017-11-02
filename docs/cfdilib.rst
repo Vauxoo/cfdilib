@@ -28,6 +28,14 @@ cfdilib.cfdv32 module
     :undoc-members:
     :show-inheritance:
 
+cfdilib.cfdv33 module
+---------------------
+
+.. automodule:: cfdilib.cfdv33
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 cfdilib.signatory module
 ------------------------
 
