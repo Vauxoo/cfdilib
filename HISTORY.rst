@@ -2,6 +2,11 @@
 History
 =======
 
+0.6.4
+-----
+
+In some cases the RFC is optional
+
 0.6.3
 -----
 
