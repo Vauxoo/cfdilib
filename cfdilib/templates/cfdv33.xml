@@ -36,7 +36,7 @@
         Rfc="{{ inv.receiver_rfc }}"
         {% if inv.receiver_name %} Nombre="{{ inv.receiver_name }}" {% endif %}
         {% if inv.receiver_country %} ResidenciaFiscal="{{ inv.receiver_country }}" {% endif %}
-        {% if inv.receiver_reg_trib %} NumRegIdTrib="{{ inv.receiver_reg_trib }}" {% endif %}
+        {% if inv.receiver_reg_trib != 'NA' %} NumRegIdTrib="{{ inv.receiver_reg_trib }}" {% endif %}
         UsoCFDI="{{ inv.receiver_use_cfdi }}"/>
     <cfdi:Conceptos>
         {% for line in inv.invoice_lines %}
