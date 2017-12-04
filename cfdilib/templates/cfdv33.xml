@@ -87,7 +87,7 @@
         </cfdi:Concepto>
         {% endfor %}
     </cfdi:Conceptos>
-    {% if inv.taxes.total_transferred != '0.00' or inv.taxes.total_withhold != '0.00' %}
+    {% if inv.taxes.transferred or inv.taxes.withhold %}
     <cfdi:Impuestos
         TotalImpuestosTrasladados="{{ inv.taxes.total_transferred }}"
         TotalImpuestosRetenidos="{{ inv.taxes.total_withhold }}">
