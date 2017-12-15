@@ -2,6 +2,7 @@
 import os
 from os.path import dirname
 from cStringIO import StringIO
+from io import BytesIO
 from abc import ABCMeta, abstractmethod
 from tempfile import NamedTemporaryFile
 
@@ -178,10 +179,11 @@ class BaseDocument:
             path = os.path.join(
                 os.path.dirname(os.path.realpath(__file__)), 'templates')
             os.chdir(path)
-            schema_root = etree.parse(StringIO(schema_str))
+            with BytesIO(schema_str) as xsd:
+                schema_root = etree.parse(xsd)
             schema = etree.XMLSchema(schema_root)
         try:
-            tree = etree.parse(StringIO(xml_valid.encode('UTF-8')))
+            tree = etree.fromstring(xml_valid.encode('UTF-8'))
             schema.assertValid(tree)
         except etree.DocumentInvalid as ups:
             self.ups = ups
