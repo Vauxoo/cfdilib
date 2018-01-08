@@ -31,11 +31,6 @@ class Struct(object):
         """
         self.__dict__.update(adict)
         for k, v in adict.items():
-            if self.__dict__[k] is False or self.__dict__[k] is None:  # pragma: no cover  # noqa
-                # I did not find a use case hereto test it but it is necessary
-                # to left there when other recursive structure comes in
-                # that's why the no cover, remove this comment if you find one.
-                self.__dict__[k] = u'NA'
             if isinstance(v, dict):
                 self.__dict__[k] = Struct(v)
             if isinstance(v, list):
@@ -95,8 +90,6 @@ class BaseDocument:
         self.set_schema(self.schema_fname)
         self.__dict__.update(dict_document)
         for k, v in dict_document.items():
-            if self.__dict__[k] is False or self.__dict__[k] is None:
-                self.__dict__[k] = u'NA'
             if isinstance(v, dict):
                 self.__dict__[k] = Struct(v)
             if isinstance(v, list):
