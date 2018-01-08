@@ -33,7 +33,7 @@
         Nombre="{{ inv.emitter_name }}"
         RegimenFiscal="{{ inv.emitter_fiscal_position or ''  }}"/>
     <cfdi:Receptor
-        Rfc="{{ inv.receiver_rfc }}"
+        {% if inv.receiver_rfc %} Rfc="{{ inv.receiver_rfc }}" {% endif %}
         {% if inv.receiver_name %} Nombre="{{ inv.receiver_name }}" {% endif %}
         {% if inv.receiver_country %} ResidenciaFiscal="{{ inv.receiver_country }}" {% endif %}
         {% if inv.receiver_reg_trib and inv.receiver_reg_trib != 'NA' %} NumRegIdTrib="{{ inv.receiver_reg_trib }}" {% endif %}
@@ -41,10 +41,10 @@
     <cfdi:Conceptos>
         {% for line in inv.invoice_lines %}
         <cfdi:Concepto
-            ClaveProdServ="{{ line.code_sat }}"
+            {% if line.code_sat %} ClaveProdServ="{{ line.code_sat }}" {% endif %}
             {% if line.code %} NoIdentificacion="{{ line.code }}" {% endif %}
             Cantidad="{{ line.quantity }}"
-            ClaveUnidad="{{ line.code_unit }}"
+            {% if line.code_unit %} ClaveUnidad="{{ line.code_unit }}" {% endif %}
             {% if line.unit %} Unidad="{{ line.unit }}" {% endif %}
             Descripcion="{{ line.name }}"
             ValorUnitario="{{ line.price_unit or 0.0 }}"
