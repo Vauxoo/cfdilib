@@ -17,7 +17,7 @@
     <PLZ:Poliza Concepto="{{ move.name }}" Fecha="{{ move.date }}" NumUnIdenPol="{{ move.id }}">
     {% for line in move.line_ids %}
         <PLZ:Transaccion Concepto="{{ line.name }}" DesCta="{{ line.account_id.name }}"
-                         NumCta="{{ line.account_id.code }}" Debe="{{ line.debit }}" Haber="{{ line.credit }}">
+                         NumCta="{{ line.account_id.code }}" Debe="{{ '%.2f' % line.debit|float }}" Haber="{{ '%.2f' % line.credit|float }}">
         </PLZ:Transaccion>
     {% endfor %}
     </PLZ:Poliza>
