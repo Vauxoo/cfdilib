@@ -14,9 +14,9 @@
     {% endif %}>
 
 {% for move in inv.moves %}
-    <PLZ:Poliza Concepto="{{ move.name }}" Fecha="{{ move.date }}" NumUnIdenPol="{{ move.id }}">
+    <PLZ:Poliza Concepto="{{ move.name|truncate(300, True) }}" Fecha="{{ move.date }}" NumUnIdenPol="{{ move.id }}">
     {% for line in move.line_ids %}
-        <PLZ:Transaccion Concepto="{{ line.name }}" DesCta="{{ line.account_id.name }}"
+        <PLZ:Transaccion Concepto="{{ line.name|truncate(200, True) }}" DesCta="{{ line.account_id.name|truncate(100, True) }}"
                          NumCta="{{ line.account_id.code }}" Debe="{{ '%.2f' % line.debit|float }}" Haber="{{ '%.2f' % line.credit|float }}">
         </PLZ:Transaccion>
     {% endfor %}
