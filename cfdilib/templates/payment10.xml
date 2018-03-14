@@ -2,7 +2,7 @@
     xmlns:cfdi="http://www.sat.gob.mx/cfd/3"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd http://www.sat.gob.mx/Pagos http://www.sat.gob.mx/sitio_internet/cfd/Pagos/Pagos10.xsd"
-    xmlns:Pago10="http://www.sat.gob.mx/Pagos"
+    xmlns:pago10="http://www.sat.gob.mx/Pagos"
     Version="3.3"
     {% if inv.serie %} Serie="{{ inv.serie }}" {% endif %}
     {% if inv.number %} Folio="{{ inv.number }}" {% endif %}
@@ -51,9 +51,9 @@
     </cfdi:Conceptos>
     {% set pay = inv.payment %}
     <cfdi:Complemento>
-        <Pago10:Pagos
+        <pago10:Pagos
             Version="1.0">
-            <Pago10:Pago
+            <pago10:Pago
                 FechaPago="{{ pay.date }}"
                 FormaDePagoP="{{ pay.way }}"
                 MonedaP="{{ pay.currency }}"
@@ -70,7 +70,7 @@
                 {% if pay.string %} CadPago="{{ pay.string }}" {% endif %}
                 {% if pay.stamp %} SelloPago="{{ pay.stamp }}" {% endif %}>
                 {% for doc in pay.docs %}
-                    <Pago10:DoctoRelacionado
+                    <pago10:DoctoRelacionado
                         IdDocumento="{{ doc.id }}"
                         {% if doc.serie %} Serie="{{ doc.serie }}" {% endif %}
                         {% if doc.number %} Folio="{{ doc.number }}" {% endif %}
@@ -83,32 +83,32 @@
                         {% if doc.remaining %} ImpSaldoInsoluto="{{ doc.remaining }}" {% endif %}/>
                 {% endfor %}
                 {% if pay.total_withhold or pay.total_taxes %}
-                    <Pago10:Impuestos
+                    <pago10:Impuestos
                         {% if pay.total_withhold %} TotalImpuestosRetenidos="{{ pay.total_withhold }}" {% endif %}
                         {% if pay.total_taxes %} TotalImpuestosTrasladados="{{ pay.total_taxes }}" {% endif %}>
                         {% if pay.withhold %}
-                            <Pago10:Retenciones>
+                            <pago10:Retenciones>
                                 {% for tax in pay.withhold %}
-                                    <Pago10:Retencion
+                                    <pago10:Retencion
                                         Impuesto="{{ tax.tax }}"
                                         Importe="{{ tax.amount }}"/>
                                 {% endfor %}
-                            </Pago10:Retenciones>
+                            </pago10:Retenciones>
                         {% endif %}
                         {% if pay.taxes %}
-                            <Pago10:Traslados>
+                            <pago10:Traslados>
                                 {% for tax in pay.taxes %}
-                                    <Pago10:Traslado
+                                    <pago10:Traslado
                                         Impuesto="{{ tax.tax }}"
                                         TipoFactor="{{ tax.type }}"
                                         TasaOCuota="{{ tax.rate }}"
                                         Importe="{{ tax.amount }}"/>
                                 {% endfor %}
-                            </Pago10:Traslados>
+                            </pago10:Traslados>
                         {% endif %}
-                    </Pago10:Impuestos>
+                    </pago10:Impuestos>
                 {% endif %}
-            </Pago10:Pago>
-        </Pago10:Pagos>
+            </pago10:Pago>
+        </pago10:Pagos>
     </cfdi:Complemento>
 </cfdi:Comprobante>
