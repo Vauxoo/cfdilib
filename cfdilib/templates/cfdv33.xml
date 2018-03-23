@@ -125,12 +125,12 @@
                    {% if inv.l10n_mx_edi_num_exporter %} NumeroExportadorConfiable="{{ inv.l10n_mx_edi_num_exporter or '' }}" {% endif %}
                    Incoterm="{{ inv.l10n_mx_edi_incoterm }}"
                    Subdivision="0"
-                   Observaciones="{{ inv.comment or ''}}"
+                   {% if inv.comment %} Observaciones="{{ inv.comment }}" {% endif %}
                    TipoCambioUSD="{{ inv.amount_usd or 0.0}}"
                    TotalUSD="{{ inv.total_usd or 0.0 }}">
                <cce11:Emisor {% if inv.emitter_l10n_mx_edi_curp %} Curp="inv.emitter_l10n_mx_edi_curp or ''" {% endif %}>
                    <cce11:Domicilio
-                       Calle="{{ inv.emitter_street or '' }}"
+                       inv.emitter_street %}Calle="{{ inv.emitter_street or '' }}"
                        {% if inv.emitter_exterior_no %} NumeroExterior="{{ inv.emitter_exterior_no or '' }}" {% endif %}
                        {% if inv.emitter_interior_no %} NumeroInterior="{{ inv.emitter_interior_no or '' }}" {% endif %}
                        {% if inv.emitter_colony %} Colonia="{{ inv.emitter_colony or '' }}" {% endif %}
