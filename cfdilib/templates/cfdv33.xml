@@ -130,7 +130,7 @@
                    TotalUSD="{{ inv.total_usd or 0.0 }}">
                <cce11:Emisor {% if inv.emitter_l10n_mx_edi_curp %} Curp="inv.emitter_l10n_mx_edi_curp or ''" {% endif %}>
                    <cce11:Domicilio
-                       inv.emitter_street %}Calle="{{ inv.emitter_street or '' }}"
+                       Calle="{{ inv.emitter_street or '' }}"
                        {% if inv.emitter_exterior_no %} NumeroExterior="{{ inv.emitter_exterior_no or '' }}" {% endif %}
                        {% if inv.emitter_interior_no %} NumeroInterior="{{ inv.emitter_interior_no or '' }}" {% endif %}
                        {% if inv.emitter_colony %} Colonia="{{ inv.emitter_colony or '' }}" {% endif %}
