@@ -2,6 +2,18 @@
 History
 =======
 
+0.7.0
+-----
+
+- l10n_mx_reports: fix error in general ledger report (#78)
+- [IMP] cfdilib: xsd added to generate payment complement (#75)
+- Changed path to allow have xsd that are imported by others xsd in the same library, and not call to SAT page each time that is generated a new XML.
+- Add catPagos.xsd file
+- [FIX] cfdilib: fix xsd file name to avoid error I/O warning : failed to load external entity "tdCFDI.xsd"
+- [FIX] cfdilib: changing complement node task#22554 (#76)
+- [FIX] l10n_mx_reports: fix error in general ledger report (#81) when "Concepto" has a length over 300 characters in operations and over 200 characters in transactions. And, when account description has a length over 100 characters.
+- [FIX][cfdilib] - Welcome template for comercio exterior node.
+
 0.6.4
 -----
 
@@ -68,7 +80,7 @@ Atributo requerido para expresar el número único de identificación de la
 póliza. El campo deberá contener la clave o nombre utilizado por el
 contribuyente para diferenciar, el tipo de póliza y el número correspondiente.
 En un mes ordinario no debe repetirse un mismo número de póliza con la clave o
-nombre asignado por el contribuyente. 
+nombre asignado por el contribuyente.
 
 0.3.3
 -----
