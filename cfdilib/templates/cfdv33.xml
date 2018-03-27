@@ -113,5 +113,58 @@
             {% endif %}
     </cfdi:Impuestos>
     {% endif %}
-    <cfdi:Complemento/>
+    <cfdi:Complemento>
+        {% if inv.l10n_mx_edi_external_trade %}
+            <cce11:ComercioExterior
+                   xmlns:cce11="http://www.sat.gob.mx/ComercioExterior11"
+                   Version="1.1"
+                   TipoOperacion="2"
+                   ClaveDePedimento="A1"
+                   CertificadoOrigen="{{ '1' if inv.l10n_mx_edi_cer_source else '0' }}"
+                   {% if inv.l10n_mx_edi_cer_source %} NumCertificadoOrigen="{{ inv.l10n_mx_edi_num_cer_source or '' }}" {% endif %}
+                   {% if inv.l10n_mx_edi_num_exporter %} NumeroExportadorConfiable="{{ inv.l10n_mx_edi_num_exporter or '' }}" {% endif %}
+                   Incoterm="{{ inv.l10n_mx_edi_incoterm }}"
+                   Subdivision="0"
+                   {% if inv.comment %} Observaciones="{{ inv.comment }}" {% endif %}
+                   TipoCambioUSD="{{ inv.amount_usd or 0.0}}"
+                   TotalUSD="{{ inv.total_usd or 0.0 }}">
+               <cce11:Emisor {% if inv.emitter_l10n_mx_edi_curp %} Curp="inv.emitter_l10n_mx_edi_curp or ''" {% endif %}>
+                   <cce11:Domicilio
+                       inv.emitter_street %}Calle="{{ inv.emitter_street or '' }}"
+                       {% if inv.emitter_exterior_no %} NumeroExterior="{{ inv.emitter_exterior_no or '' }}" {% endif %}
+                       {% if inv.emitter_interior_no %} NumeroInterior="{{ inv.emitter_interior_no or '' }}" {% endif %}
+                       {% if inv.emitter_colony %} Colonia="{{ inv.emitter_colony or '' }}" {% endif %}
+                       {% if inv.emitter_l10n_mx_edi_locality_code %} Localidad="{{ inv.emitter_l10n_mx_edi_locality_code or '' }}" {% endif %}
+                       {% if inv.emitter_l10n_mx_edi_city_code %} Municipio="{{ inv.emitter_l10n_mx_edi_city_code or '' }}" {% endif %}
+                       Estado="{{ inv.emmiter_state_l10n_mx_edi_code or '' }}"
+                       Pais="{{ inv.emitter_country_l10n_mx_edi_code or '' }}"
+                       CodigoPostal="{{ inv.emitter_zip or '' }}"/>
+               </cce11:Emisor>
+               <cce11:Receptor>
+                   <cce11:Domicilio
+                       Calle="{{ inv.receiver_street or '' }}"
+                       {% if inv.receiver_exterior_no %} NumeroExterior="{{ inv.receiver_exterior_no or '' }}" {% endif %}
+                       {% if inv.receiver_interior_no %} NumeroInterior="{{ inv.receiver_interior_no or '' }}" {% endif %}
+                       {% if inv.receiver_colony %} Colonia="{{ inv.receiver_colony or '' }}" {% endif %}
+                       {% if inv.receiver_l10n_mx_edi_locality %} Localidad="{{ inv.receiver_l10n_mx_edi_locality or '' }}" {% endif %}
+                       {% if inv.receiver_l10n_mx_edi_city %} Municipio="{{ inv.receiver_l10n_mx_edi_city or '' }}" {% endif %}
+                       Estado="{{ inv.receiver_state or '' }}"
+                       Pais="{{ inv.receiver_country_l10n_mx_edi_code or '' }}"
+                       CodigoPostal="{{ inv.receiver_zip or '' }}"/>
+               </cce11:Receptor>
+               <cce11:Mercancias>
+                    {% for line in inv.external_trade_invoice_lines %}
+                        <cce11:Mercancia
+                           NoIdentificacion="{{ line.product_default_code or '' }}"
+                           {% if line.product_l10n_mx_edi_tariff_fraction %} FraccionArancelaria="{{ line.product_l10n_mx_edi_tariff_fraction or '' }}" {% endif %}
+                           {% if line.quantity_aduana %} CantidadAduana="{{ line.quantity_aduana or 0.0 }}" {% endif %}
+                           {% if line.product_l10n_mx_edi_umt_aduana_l10n_mx_edi_code_aduana %} UnidadAduana="{{ line.product_l10n_mx_edi_umt_aduana_l10n_mx_edi_code_aduana or '' }}" {% endif %}
+                           {% if line.unit_value_usd %} ValorUnitarioAduana="{{ line.unit_value_usd or 0.0 }}" {% endif %}
+                           ValorDolares="{{ line.usd_value or 0.0 }}">
+                       </cce11:Mercancia>
+                    {% endfor %}
+               </cce11:Mercancias>
+            </cce11:ComercioExterior>
+        {% endif %}
+    </cfdi:Complemento>
 </cfdi:Comprobante>
