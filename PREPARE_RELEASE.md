@@ -28,8 +28,7 @@ tox
 - [ ] Release on PyPI by uploading both sdist and wheel:
 
 ```
-python setup.py sdist upload
-python setup.py bdist_wheel upload
+twine upload dist/*
 ```
 
 - [ ] Test that it pip installs:
