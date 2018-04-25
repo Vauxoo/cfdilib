@@ -18,6 +18,16 @@
     {% for line in move.line_ids %}
         <PLZ:Transaccion Concepto="{{ line.name|truncate(200, True) }}" DesCta="{{ line.account_id.name|truncate(100, True) }}"
                          NumCta="{{ line.account_id.code }}" Debe="{{ '%.2f' % line.debit|float }}" Haber="{{ '%.2f' % line.credit|float }}">
+            {% if (line.invoice_id and line.invoice_id.cfdi_uuid) or (line.payment_id and line.payment_id.l10n_mx_edi_cfdi_uuid) %}
+                <PLZ:CompNal
+                    UUID_CFDI="{{ (line.invoice_id and line.invoice_id.cfdi_uuid) or (line.payment_id and line.payment_id.l10n_mx_edi_cfdi_uuid) }}"
+                    RFC="{{ (line.invoice_id and line.invoice_id.partner_id.vat) or (line.payment_id and line.payment_id.partner_id.vat) }}"
+                    MontoTotal="{{ (line.invoice_id and '%.2f' % line.invoice_id.amount_total|float) or (line.payment_id and '%.2f' % line.payment_id.amount|float) }}"
+                    {% if (line.invoice_id and line.invoice_id.currency_id.name != 'MXN') or (line.payment_id and line.payment_id.currency_id.name != 'MXN') %}
+                        Moneda="{{ (line.invoice_id and line.invoice_id.currency_id.name) or (line.payment_id and line.payment_id.currency_id.name) }}"
+                        TipCamb="{{ (line.invoice_id and '%.5f' % line.invoice_id.rate|float) or (line.payment_id and '%.5f' % line.payment_id.get_payment_cfdi_v33().get('rate', 0)|float) }}"
+                    {% endif %}/>
+            {% endif %}
         </PLZ:Transaccion>
     {% endfor %}
     </PLZ:Poliza>
