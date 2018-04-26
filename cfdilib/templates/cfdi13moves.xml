@@ -39,6 +39,13 @@
                             Moneda="{{ cfdi_values.get('currency') }}"
                             TipCamb="{{ '%.5f' % cfdi_values.get('rate')|float }}"
                         {% endif %}/>
+                {% else %}
+                    {% for payslip in inv.payslips if payslip.number == line.ref and payslip.l10n_mx_edi_cfdi_uuid %}
+                        <PLZ:CompNal
+                            UUID_CFDI="{{ payslip.l10n_mx_edi_cfdi_uuid }}"
+                            RFC="{{ payslip.l10n_mx_edi_cfdi_customer_rfc }}"
+                            MontoTotal="{{ payslip.l10n_mx_edi_cfdi_amount }}"/>
+                    {% endfor %}
                 {% endfor %}
             {% endif %}
         </PLZ:Transaccion>
