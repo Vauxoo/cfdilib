@@ -111,10 +111,37 @@
                 {% endfor %}
             </cfdi:Traslados>
             {% endif %}
+            {% if inv.taxes.transferred %}
     </cfdi:Impuestos>
     {% endif %}
     <cfdi:Complemento>
-        {% if inv.l10n_mx_edi_external_trade %}
+        {% if inv.l10n_mx_edi_implocal) %}
+          <implocal:ImpuestosLocales
+           xmlns:implocal="http://www.sat.gob.mx/implocal"
+           version="1.0"
+           TotaldeRetenciones="'%.*f' % (decimal_precision, {{ inv.taxes.total_withhold }})"
+           TotaldeTraslados="'%.*f' % (decimal_precision, {{ inv.taxes.total_transferred }})">
+              {% for tax in line.taxes.transferred %}
+                {% if tax.type != 'Exento' %}
+                  <implocal:TrasladosLocales
+                   ImpLocTrasladado="tax.name"
+                   TasadeTraslado="'%.6f' % round(abs(tax.amount), 2)"
+                   Importe="'%.2f' % (tax.amount / 100 * float(inv.amount_untaxed)) "
+                  />
+                {% endif %}
+              {% endfor %}
+              <t t-if="withholding_local">
+                  <t t-foreach="withholding_local" t-as="tax">
+                      <implocal:RetencionesLocales
+                       ImpLocRetenido="tax.name"
+                       TasadeRetencion="'%.6f' % round(abs(tax.amount), 2)"
+                       Importe="'%.2f' % (abs(tax.amount) / 100 * float(inv.amount_untaxed)) "
+                      />
+                  </t>
+              </t>
+          </implocal:ImpuestosLocales>
+        {% endif %}
+          {% if inv.l10n_mx_edi_external_trade %}
             <cce11:ComercioExterior
                    xmlns:cce11="http://www.sat.gob.mx/ComercioExterior11"
                    Version="1.1"
