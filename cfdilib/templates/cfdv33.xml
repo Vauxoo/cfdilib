@@ -114,6 +114,30 @@
     </cfdi:Impuestos>
     {% endif %}
     <cfdi:Complemento>
+        {% if inv.l10n_mx_edi_implocal %}
+          {% if inv.l10n_mx_edi_implocal.total_transferred_local > 0 or inv.l10n_mx_edi_implocal.total_withold_local > 0 %}
+             <implocal:ImpuestosLocales
+              xmlns:implocal="http://www.sat.gob.mx/implocal"
+              version="1.0"
+              TotaldeRetenciones="{{ inv.l10n_mx_edi_implocal.total_withold_local }}"
+              TotaldeTraslados="{{ inv.l10n_mx_edi_implocal.total_transferred_local }}">
+                 {% for tax_local in inv.l10n_mx_edi_implocal.local_taxes_transferred %}
+                     <implocal:TrasladosLocales
+                      ImpLocTrasladado="{{ tax_local.name}}"
+                      TasadeTraslado="{{ tax_local.amount}}"
+                      Importe="{{ tax_local.import}}"
+                     />
+                 {% endfor %}
+                 {% for tax_local in inv.l10n_mx_edi_implocal.local_taxes_withold %}
+                     <implocal:RetencionesLocales
+                      ImpLocRetenido="{{ tax_local.name}}"
+                      TasadeRetencion="{{ tax_local.amount}}"
+                      Importe="{{ tax_local.import}}"
+                     />
+                 {% endfor %}
+             </implocal:ImpuestosLocales>
+          {% endif %}
+        {% endif %}
         {% if inv.l10n_mx_edi_external_trade %}
             <cce11:ComercioExterior
                    xmlns:cce11="http://www.sat.gob.mx/ComercioExterior11"

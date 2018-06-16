@@ -2,6 +2,11 @@
 History
 =======
 
+0.7.1
+-----
+
+- Welcome Impuesto Locales
+
 0.7.0
 -----
 
