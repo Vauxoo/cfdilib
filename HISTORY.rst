@@ -5,7 +5,9 @@ History
 0.7.1
 -----
 
-- Welcome Impuesto Locales
+- Welcome Impuesto Locales.
+- Proper version of click.
+- Fix SAT references.
 
 0.7.0
 -----
