@@ -28,6 +28,7 @@ tox
 - [ ] Release on PyPI by uploading both sdist and wheel:
 
 ```
+python setup.py sdist bdist_wheel
 twine upload dist/*
 ```
 
