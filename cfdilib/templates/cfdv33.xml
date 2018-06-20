@@ -18,7 +18,7 @@
     Total="{{ inv.amount_total or 0.0}}"
     TipoDeComprobante="{{ inv.document_type }}"
     {% if inv.pay_method %} MetodoPago="{{ inv.pay_method }}" {% endif %}
-    LugarExpedicion="{{ inv.emitter_zip }}"
+    {% if inv.emitter_zip %} LugarExpedicion="{{ inv.emitter_zip  }}" {% endif %}
     {% if inv.confirmation %} Confirmacion="{{ inv.confirmation }}" {% endif %}>
     {% if inv.cfdi_related_type %}
         <cfdi:CfdiRelacionados
