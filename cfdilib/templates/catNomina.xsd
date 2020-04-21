@@ -48,6 +48,20 @@
       <xs:enumeration value="141"/>
       <xs:enumeration value="143"/>
       <xs:enumeration value="145"/>
+      <xs:enumeration value="147"/>
+      <xs:enumeration value="148"/>
+      <xs:enumeration value="149"/>
+      <xs:enumeration value="150"/>
+      <xs:enumeration value="151"/>
+      <xs:enumeration value="152"/>
+      <xs:enumeration value="153"/>
+      <xs:enumeration value="154"/>
+      <xs:enumeration value="155"/>
+      <xs:enumeration value="156"/>
+      <xs:enumeration value="157"/>
+      <xs:enumeration value="158"/>
+      <xs:enumeration value="159"/>
+      <xs:enumeration value="160"/>
       <xs:enumeration value="166"/>
       <xs:enumeration value="168"/>
       <xs:enumeration value="600"/>
@@ -92,9 +106,9 @@
       <xs:enumeration value="655"/>
       <xs:enumeration value="656"/>
       <xs:enumeration value="659"/>
+      <xs:enumeration value="670"/>
       <xs:enumeration value="901"/>
       <xs:enumeration value="902"/>
-      <xs:enumeration value="670"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="c_OrigenRecurso">
@@ -240,6 +254,13 @@
       <xs:enumeration value="098"/>
       <xs:enumeration value="099"/>
       <xs:enumeration value="100"/>
+      <xs:enumeration value="101"/>
+      <xs:enumeration value="102"/>
+      <xs:enumeration value="103"/>
+      <xs:enumeration value="104"/>
+      <xs:enumeration value="105"/>
+      <xs:enumeration value="106"/>
+      <xs:enumeration value="107"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="c_TipoHoras">
@@ -256,14 +277,15 @@
       <xs:enumeration value="01"/>
       <xs:enumeration value="02"/>
       <xs:enumeration value="03"/>
+      <xs:enumeration value="04"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="c_TipoJornada">
     <xs:restriction base="xs:string">
-      <xs:whiteSpace value="collapse" />
+      <xs:whiteSpace value="collapse"/>
+      <xs:enumeration value="01"/>
       <xs:enumeration value="02"/>
       <xs:enumeration value="03"/>
-      <xs:enumeration value="01"/>
       <xs:enumeration value="04"/>
       <xs:enumeration value="05"/>
       <xs:enumeration value="06"/>
@@ -286,6 +308,11 @@
       <xs:enumeration value="002"/>
       <xs:enumeration value="003"/>
       <xs:enumeration value="004"/>
+      <xs:enumeration value="005"/>
+      <xs:enumeration value="006"/>
+      <xs:enumeration value="007"/>
+      <xs:enumeration value="008"/>
+      <xs:enumeration value="009"/>
       <xs:enumeration value="999"/>
     </xs:restriction>
   </xs:simpleType>
@@ -333,13 +360,16 @@
       <xs:enumeration value="048"/>
       <xs:enumeration value="049"/>
       <xs:enumeration value="050"/>
+      <xs:enumeration value="051"/>
+      <xs:enumeration value="052"/>
+      <xs:enumeration value="053"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="c_TipoRegimen">
     <xs:restriction base="xs:string">
       <xs:whiteSpace value="collapse"/>
-      <xs:enumeration value="03"/>
       <xs:enumeration value="02"/>
+      <xs:enumeration value="03"/>
       <xs:enumeration value="04"/>
       <xs:enumeration value="05"/>
       <xs:enumeration value="06"/>
@@ -348,6 +378,8 @@
       <xs:enumeration value="09"/>
       <xs:enumeration value="10"/>
       <xs:enumeration value="11"/>
+      <xs:enumeration value="12"/>
+      <xs:enumeration value="13"/>
       <xs:enumeration value="99"/>
     </xs:restriction>
   </xs:simpleType>
@@ -359,6 +391,7 @@
       <xs:enumeration value="3"/>
       <xs:enumeration value="4"/>
       <xs:enumeration value="5"/>
+      <xs:enumeration value="99"/>
     </xs:restriction>
   </xs:simpleType>
 </xs:schema>
