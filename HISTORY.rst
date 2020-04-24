@@ -2,6 +2,11 @@
 History
 =======
 
+0.7.4
+-----
+
+- Update catNomina.xsd from SAT (#95)
+
 0.7.3
 -----
 
