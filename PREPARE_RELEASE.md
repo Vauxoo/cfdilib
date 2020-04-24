@@ -28,7 +28,8 @@ tox
 - [ ] Release on PyPI by uploading both sdist and wheel:
 
 ```
-python setup.py sdist bdist_wheel
+sudo apt install python-stuptools
+python setup.py sdist
 twine upload dist/*
 ```
 
