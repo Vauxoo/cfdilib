@@ -80,10 +80,12 @@
                     {% endif %}
                 </cfdi:Impuestos>
             {% endif %}
-            {% for value in line.customs_number %}
-                <cfdi:InformacionAduanera
-                    NumeroPedimento="{{ value.number }}"/>
-            {% endfor %}
+            {% if not inv.l10n_mx_edi_external_trade %}
+                {% for value in line.customs_number %}
+                    <cfdi:InformacionAduanera
+                        NumeroPedimento="{{ value.number }}"/>
+                {% endfor %}
+            {% endif %}
         </cfdi:Concepto>
         {% endfor %}
     </cfdi:Conceptos>
