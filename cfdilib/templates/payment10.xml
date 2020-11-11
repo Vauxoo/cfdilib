@@ -109,6 +109,65 @@
                     </pago10:Impuestos>
                 {% endif %}
             </pago10:Pago>
+            {% if inv.third_party_payment %}
+                {% set pay_third = inv.third_party_payment %}
+                <pago10:Pago
+                    FechaPago="{{ pay_third.date }}"
+                    FormaDePagoP="{{ pay_third.way }}"
+                    MonedaP="{{ pay_third.currency }}"
+                    {% if pay_third.rate %} TipoCambioP="{{ pay_third.rate }}" {% endif %}
+                    Monto="{{ pay_third.amount }}"
+                    {% if pay_third.operation_no %} NumOperacion="{{ pay_third.operation_no }}" {% endif %}
+                    {% if pay_third.vat_ord %} RfcEmisorCtaOrd="{{ pay_third.vat_ord }}" {% endif %}
+                    {% if pay_third.name_ord %} NomBancoOrdExt="{{ pay_third.name_ord }}" {% endif %}
+                    {% if pay_third.account_ord %} CtaOrdenante="{{ pay_third.account_ord }}" {% endif %}
+                    {% if pay_third.vat_receiver %} RfcEmisorCtaBen="{{ pay_third.vat_receiver }}" {% endif %}
+                    {% if pay_third.account_receiver %} CtaBeneficiario="{{ pay_third.account_receiver }}" {% endif %}
+                    {% if pay_third.ent_type %} TipoCadPago="{{ pay_third.ent_type }}" {% endif %}
+                    {% if pay_third.certificate %} CertPago="{{ pay_third.certificate }}" {% endif %}
+                    {% if pay_third.string %} CadPago="{{ pay_third.string }}" {% endif %}
+                    {% if pay_third.stamp %} SelloPago="{{ pay_third.stamp }}" {% endif %}>
+                    {% for doc in pay_third.docs %}
+                        <pago10:DoctoRelacionado
+                            IdDocumento="{{ doc.id }}"
+                            {% if doc.serie %} Serie="{{ doc.serie }}" {% endif %}
+                            {% if doc.number %} Folio="{{ doc.number }}" {% endif %}
+                            MonedaDR="{{ doc.currency }}"
+                            {% if doc.rate %} TipoCambioDR="{{ doc.rate }}" {% endif %}
+                            {% if doc.ent_method %} MetodoDePagoDR="{{ doc.ent_method }}" {% endif %}
+                            {% if doc.number_ent %} NumParcialidad="{{ doc.number_ent }}" {% endif %}
+                            {% if doc.previous_balance %} ImpSaldoAnt="{{ doc.previous_balance }}" {% endif %}
+                            {% if doc.amount %} ImpPagado="{{ doc.amount }}" {% endif %}
+                            {% if doc.remaining %} ImpSaldoInsoluto="{{ doc.remaining }}" {% endif %}/>
+                    {% endfor %}
+                    {% if pay_third.total_withhold or pay_third.total_taxes %}
+                        <pago10:Impuestos
+                            {% if pay_third.total_withhold %} TotalImpuestosRetenidos="{{ pay_third.total_withhold }}" {% endif %}
+                            {% if pay_third.total_taxes %} TotalImpuestosTrasladados="{{ pay_third.total_taxes }}" {% endif %}>
+                            {% if pay_third.withhold %}
+                                <pago10:Retenciones>
+                                    {% for tax in pay_third.withhold %}
+                                        <pago10:Retencion
+                                            Impuesto="{{ tax.tax }}"
+                                            Importe="{{ tax.amount }}"/>
+                                    {% endfor %}
+                                </pago10:Retenciones>
+                            {% endif %}
+                            {% if pay_third.taxes %}
+                                <pago10:Traslados>
+                                    {% for tax in pay_third.taxes %}
+                                        <pago10:Traslado
+                                            Impuesto="{{ tax.tax }}"
+                                            TipoFactor="{{ tax.type }}"
+                                            TasaOCuota="{{ tax.rate }}"
+                                            Importe="{{ tax.amount }}"/>
+                                    {% endfor %}
+                                </pago10:Traslados>
+                            {% endif %}
+                        </pago10:Impuestos>
+                    {% endif %}
+                </pago10:Pago>
+            {% endif %}
         </pago10:Pagos>
     </cfdi:Complemento>
 </cfdi:Comprobante>
